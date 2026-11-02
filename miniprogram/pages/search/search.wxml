@@ -1,0 +1,48 @@
+<view class="root {{gq}}">
+  <glass-bg />
+  <glass-nav title="{{pageTitle}}" back />
+
+  <!-- 搜索条 -->
+  <view class="search-bar glass-2">
+    <view class="search-field">
+      <input class="search-input" value="{{q}}" placeholder="搜索政策、办事指南…"
+             placeholder-class="ph" bindinput="onInput" bindconfirm="onSearch" confirm-type="search" />
+    </view>
+    <view class="search-btn press" hover-class="pressed" hover-start-time="0" hover-stay-time="60"
+          bindtap="onSearch">搜索</view>
+  </view>
+
+  <!-- 类型筛选 -->
+  <scroll-view class="filter-row" scroll-x enhanced show-scrollbar="{{false}}">
+    <view class="filter-chip press {{type === item.value ? 'on' : ''}}"
+          hover-class="pressed" hover-start-time="0" hover-stay-time="60"
+          wx:for="{{filters}}" wx:key="value" data-value="{{item.value}}" bindtap="onFilter">{{item.label}}</view>
+  </scroll-view>
+
+  <view wx:if="{{loading}}" class="loading-box">搜索中…</view>
+
+  <block wx:else>
+    <view wx:if="{{results.length === 0}}" class="empty">
+      <text class="empty-icon">🌵</text>
+      <text class="empty-line">没有找到相关内容</text>
+      <text class="empty-line">换个关键词试试，或找 AI 助手聊聊</text>
+    </view>
+
+    <block wx:else>
+      <view class="result-count">找到 {{results.length}} 条结果</view>
+      <view class="card result-item press" hover-class="pressed" hover-start-time="0" hover-stay-time="60"
+            wx:for="{{results}}" wx:key="id" data-id="{{item.id}}" bindtap="onTap">
+        <view class="result-title">{{item.title}}</view>
+        <view class="result-meta">
+          <text class="tag tag-type">{{item.typeName}}</text>
+          <text wx:if="{{item.official}}" class="tag tag-official">官方来源</text>
+          <text wx:if="{{item.expired}}" class="tag tag-expired">⚠ 可能已过期</text>
+        </view>
+        <view wx:if="{{item.summary}}" class="result-summary">{{item.summary}}</view>
+        <view class="result-source">{{item.sourceName}}<text wx:if="{{item.dateText}}"> · {{item.dateText}}</text></view>
+      </view>
+    </block>
+  </block>
+
+  <view class="footer-tip">共 {{results.length}} 条 · 官方信息优先</view>
+</view>

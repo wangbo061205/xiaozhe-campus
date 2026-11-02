@@ -1,0 +1,13 @@
+<view wx:if="{{!keyboardHidden}}" class="tabbar-dock">
+  <view class="tabbar {{gq}}">
+    <view class="tabbar__thumb" style="transform: translateX({{active * 100}}%)"></view>
+
+    <view class="tabbar__item {{active === index ? 'tabbar__item--on' : ''}}"
+          wx:for="{{list}}" wx:key="pagePath"
+          data-index="{{index}}" bindtap="onTap"
+          hover-class="tabbar__item--press" hover-start-time="0" hover-stay-time="60">
+      <image class="tabbar__icon" src="/assets/icons/{{item.icon}}{{active === index ? '-green' : ''}}.png" />
+      <text class="tabbar__label">{{item.text}}</text>
+    </view>
+  </view>
+</view>

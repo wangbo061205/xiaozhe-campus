@@ -1,0 +1,10 @@
+const {test} = require('node:test')
+const assert = require('node:assert/strict')
+const api = require('../miniprogram/utils/api.js')
+test('官网原日期经过数据库UTC返回后仍按中国日期显示', () => {
+  assert.equal(api.shortDate('2026-09-19T16:00:00Z'),'2026-09-20')
+  assert.equal(api.shortDate('2026-09-20T00:00:00+08:00'),'2026-09-20')
+  assert.equal(api.shortDate('2026-09-20'),'2026-09-20')
+  assert.equal(api.shortDate(null),'')
+  assert.equal(api.shortDate('invalid'),'')
+})

@@ -1,0 +1,261 @@
+/* 详情页 —— 玻璃版 */
+
+.detail-card {
+  margin-top: 8rpx;
+  padding: 34rpx 30rpx;
+}
+
+.detail-title {
+  font-size: 38rpx;
+  font-weight: 700;
+  line-height: 1.45;
+  margin-bottom: 18rpx;
+  color: var(--ink);
+}
+
+.detail-meta {
+  margin-bottom: 14rpx;
+}
+
+.detail-source {
+  font-size: 24rpx;
+  color: var(--ink-3);
+  padding-bottom: 22rpx;
+  border-bottom: 1rpx solid var(--campus-line);
+  margin-bottom: 26rpx;
+}
+
+.detail-content {
+  font-size: var(--body-size);
+  line-height: 1.9;
+  color: var(--ink);
+  white-space: pre-wrap;
+}
+
+.detail-link {
+  display: inline-block;
+  color: var(--campus-accent-ink);
+  font-size: 26rpx;
+  margin-top: 30rpx;
+  padding: 12rpx 28rpx;
+  border-radius: var(--content-radius);
+  background: var(--campus-canvas);
+  box-shadow: none;
+}
+
+.actions-card .section-title {
+  margin-bottom: 22rpx;
+}
+
+.action-row {
+  display: flex;
+  gap: 20rpx;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 28rpx 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: var(--content-radius);
+}
+
+.action-icon {
+  font-size: 42rpx;
+  line-height: 1;
+  margin-bottom: 10rpx;
+}
+
+.action-text {
+  font-size: 26rpx;
+  color: var(--campus-accent-ink);
+  font-weight: 500;
+}
+
+.disclaimer {
+  font-size: 22rpx;
+  color: var(--ink-3);
+  margin-top: 26rpx;
+  text-align: center;
+  line-height: 1.7;
+}
+
+/* ── 材料清单 ── */
+.material-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 20rpx 24rpx;
+  border-radius: var(--content-radius);
+  margin-bottom: 14rpx;
+}
+
+.material-dot {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: var(--primary);
+  margin: 16rpx 18rpx 0 0;
+  flex: 0 0 auto;
+}
+
+.material-text {
+  flex: 1;
+  font-size: 28rpx;
+  color: var(--ink);
+  line-height: 1.6;
+}
+
+.material-tip {
+  font-size: 22rpx;
+  color: var(--ink-3);
+  margin-top: 10rpx;
+  line-height: 1.7;
+}
+
+/* ── 开始办理 ── */
+.start-btn {
+  background: var(--primary);
+  color: var(--campus-on-accent);
+  font-size: 30rpx;
+  font-weight: 500;
+  text-align: center;
+  padding: 26rpx 0;
+  border-radius: var(--content-radius);
+  box-shadow: none;
+}
+
+.start-hint {
+  font-size: 22rpx;
+  color: var(--ink-3);
+  margin-top: 16rpx;
+  text-align: center;
+}
+
+/* ── 申请草稿弹层 ── */
+.sheet-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .55);
+  z-index: 90;
+}
+
+.draft-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 91;
+  padding: 32rpx 30rpx calc(40rpx + env(safe-area-inset-bottom));
+  border-radius: var(--content-radius);
+  transform: translateY(110%);
+  transition: transform var(--dur-sheet, 420ms) var(--ease, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.draft-sheet.show {
+  transform: translateY(0);
+}
+
+.draft-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22rpx;
+}
+
+.draft-title {
+  font-size: var(--body-size);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.draft-close {
+  font-size: 26rpx;
+  color: var(--campus-accent-ink);
+  padding: 8rpx 20rpx;
+  background: var(--campus-canvas);
+  border-radius: var(--content-radius);
+}
+
+.draft-hint {
+  font-size: 24rpx;
+  color: var(--ink-2);
+  line-height: 1.7;
+  margin-bottom: 18rpx;
+}
+
+.draft-input {
+  width: 100%;
+  box-sizing: border-box;
+  height: 160rpx;
+  padding: 20rpx 24rpx;
+  border-radius: var(--content-radius);
+  font-size: 27rpx;
+  margin-bottom: 22rpx;
+}
+
+.draft-gen-btn {
+  background: var(--primary);
+  color: var(--campus-on-accent);
+  font-size: 29rpx;
+  font-weight: 500;
+  text-align: center;
+  padding: 24rpx 0;
+  border-radius: var(--content-radius);
+  box-shadow: none;
+}
+
+.draft-gen-btn.disabled {
+  background: var(--campus-canvas);
+  color: var(--ink-3);
+  box-shadow: none;
+}
+
+.draft-output {
+  width: 100%;
+  box-sizing: border-box;
+  height: 420rpx;
+  padding: 24rpx;
+  border-radius: var(--content-radius);
+  font-size: 27rpx;
+  line-height: 1.8;
+  margin-bottom: 22rpx;
+}
+
+.draft-actions {
+  display: flex;
+  gap: 20rpx;
+}
+
+.draft-btn {
+  flex: 1;
+  text-align: center;
+  padding: 22rpx 0;
+  border-radius: var(--content-radius);
+  font-size: 28rpx;
+  font-weight: 500;
+}
+
+.draft-btn.ghost {
+  background: var(--campus-canvas);
+  color: var(--campus-accent-ink);
+  box-shadow: none;
+}
+
+.draft-btn.primary {
+  background: var(--primary);
+  color: var(--campus-on-accent);
+  box-shadow: none;
+}
+
+.draft-note {
+  font-size: 22rpx;
+  color: var(--ink-3);
+  text-align: center;
+  margin-top: 18rpx;
+}
+
+/* Selected design overrides. */
+.draft-sheet { padding-left: var(--page-gutter); padding-right: var(--page-gutter); }
+.detail-card { padding: 28rpx; }
+.draft-input, .draft-output { color: var(--ink); }

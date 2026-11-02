@@ -1,0 +1,26 @@
+<view class="root {{gq}}">
+  <glass-bg />
+  <glass-nav title="我的收藏" back />
+
+  <view wx:if="{{loading}}" class="loading-box">加载中…</view>
+
+  <block wx:else>
+    <view wx:if="{{list.length === 0}}" class="empty">
+      <text class="empty-icon">⭐</text>
+      <text>还没有收藏内容</text>
+      <text class="empty-sub">在搜索或详情页点「收藏」就能存到这里</text>
+    </view>
+
+    <view class="card fav-item press" hover-class="pressed" hover-start-time="0" hover-stay-time="60"
+          wx:for="{{list}}" wx:key="id" data-id="{{item.knowledgeId}}" bindtap="onTap">
+      <view class="fav-head">
+        <text class="tag tag-type">{{item.typeName}}</text>
+        <text wx:if="{{item.official}}" class="tag tag-official">官方来源</text>
+        <text class="fav-remove" catchtap="onRemove" data-kid="{{item.knowledgeId}}">取消收藏</text>
+      </view>
+      <view class="fav-title">{{item.title}}</view>
+      <view wx:if="{{item.summary}}" class="fav-summary">{{item.summary}}</view>
+      <view class="fav-source">{{item.sourceName || '来源未标注'}}</view>
+    </view>
+  </block>
+</view>

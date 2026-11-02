@@ -1,0 +1,52 @@
+<view class="root root--tab {{gq}}">
+  <glass-bg />
+  <glass-nav title="北民大校园助手" />
+  <view class="campus-banner {{cover ? 'campus-banner--photo' : ''}}">
+    <image wx:if="{{cover}}" class="campus-photo" src="{{cover}}" mode="aspectFill" binderror="onCoverError" />
+    <view wx:if="{{cover}}" class="photo-shade"></view>
+    <view class="banner-content">
+      <view class="banner-date">{{greeting}} · {{today}}</view>
+      <view class="banner-title">北民大校园</view>
+      <picker range="{{campuses}}" range-key="title" value="{{campusIndex}}" bindchange="onCampusChange" disabled="{{!campuses.length}}">
+        <view class="campus-select"><image src="/assets/icons/map-green.png" /><text>{{campusName}}</text><image src="/assets/icons/chevron-down.png" /></view>
+      </picker>
+    </view>
+    <text wx:if="{{cover}}" class="photo-credit">校园影像 · 小北云</text>
+  </view>
+  <view class="home-search">
+    <view class="search-field-row">
+      <image class="icon-sm" src="/assets/icons/search-green.png" />
+      <input placeholder="搜索办事指南、校园信息" value="{{keyword}}" bindinput="onInput" bindconfirm="onSearch" confirm-type="search" />
+      <view class="search-action" bindtap="onSearch" aria-label="搜索"><image class="icon-sm" src="/assets/icons/arrow-right-green.png" /></view>
+    </view>
+  </view>
+  <view class="quick-section">
+    <view class="quick-grid">
+      <view class="quick-item" wx:for="{{quicks}}" wx:key="label" data-index="{{index}}" bindtap="onQuick" hover-class="pressed">
+        <view class="quick-symbol quick-symbol--{{item.icon}} tone-{{item.tone}}"><image src="/assets/icons/{{item.icon}}-green.png" /></view>
+        <text class="quick-label">{{item.label}}</text>
+      </view>
+    </view>
+  </view>
+  <view class="today-band" bindtap="goAcademics" hover-class="pressed">
+    <view class="today-icon"><image class="icon" src="/assets/icons/graduation-cap-green.png" /></view>
+    <view class="today-main"><view class="today-title">{{todayCourses.length ? '今天有 ' + todayCourses.length + ' 门课程' : '我的课表与成绩'}}</view>
+      <view class="subtle">{{todayCourses.length ? todayCourses[0].name : '教务中心'}}</view>
+    </view>
+    <image class="icon-sm" src="/assets/icons/chevron-right.png" />
+  </view>
+  <view class="surface-section">
+    <view class="section-head"><text class="section-title">校园正在发生</text><view class="section-action" bindtap="goServices">校园生活<image class="icon-sm" src="/assets/icons/chevron-right.png" /></view></view>
+    <view wx:if="{{loadingCampus}}" class="state-box">正在加载校园动态</view>
+    <view wx:elif="{{campusError}}" class="state-box"><view class="state-title">{{campusError}}</view><view class="state-action" bindtap="loadCampus">重新加载</view></view>
+    <view wx:elif="{{!activities.length}}" class="state-box"><image src="/assets/icons/calendar-days.png" /><view>暂无校园活动</view></view>
+    <view class="activity-item" wx:for="{{activities}}" wx:key="id" data-id="{{item.id}}" bindtap="openActivity" hover-class="pressed">
+      <image wx:if="{{item.cover}}" class="activity-cover" src="{{item.cover}}" mode="aspectFill" />
+      <view wx:else class="activity-placeholder"><image src="/assets/icons/calendar-days-green.png" /></view>
+      <view class="activity-main"><view class="activity-tag">{{item.lifecycleLabel || '校园活动'}}</view><view class="activity-title">{{item.title}}</view><view class="subtle">{{item.dateText}}</view></view>
+      <image class="icon-sm" src="/assets/icons/chevron-right.png" />
+    </view>
+  </view>
+  <view class="map-band" bindtap="goMap" hover-class="pressed"><image class="map-band-icon" src="/assets/icons/compass-green.png" /><view><view class="map-band-title">逛逛校园</view><view class="subtle">{{campusName}}</view></view><image class="icon" src="/assets/icons/arrow-right-green.png" /></view>
+  <view class="home-bottom"><text wx:for="{{hotWords}}" wx:key="*this" data-word="{{item}}" bindtap="onHot">{{item}}</text></view>
+</view>

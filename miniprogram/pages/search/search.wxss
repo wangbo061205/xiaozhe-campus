@@ -1,0 +1,100 @@
+/* 搜索页 —— 玻璃版 */
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin: 8rpx 24rpx 16rpx;
+  padding: 10rpx 10rpx 10rpx 24rpx;
+  border-radius: var(--content-radius);
+}
+
+/* 原生 input 用有界容器包裹，避免内容撑宽盖过按钮 */
+.search-field {
+  flex: 1;
+  min-width: 0;
+}
+
+.search-input {
+  width: 100%;
+  height: 84rpx;
+  line-height: 84rpx;
+  padding: 0;
+  font-size: 28rpx;
+  color: var(--ink);
+}
+
+.ph {
+  color: var(--ink-2);
+}
+
+.search-btn {
+  flex: 0 0 auto;
+  height: 84rpx;
+  padding: 0 34rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  color: var(--campus-on-accent);
+  font-size: 27rpx;
+  font-weight: 500;
+  line-height: 1;
+  border-radius: var(--content-radius);
+  box-shadow: none;
+}
+
+.filter-row {
+  white-space: nowrap;
+  padding: 4rpx 24rpx 12rpx;
+}
+
+.filter-chip {
+  display: inline-block;
+  margin: 0 14rpx 0 0;
+}
+
+.result-count {
+  font-size: 24rpx;
+  color: var(--ink-3);
+  padding: 12rpx 36rpx 0;
+}
+
+.result-item {
+  margin-top: 16rpx;
+}
+
+.result-title {
+  font-size: var(--body-size);
+  font-weight: 600;
+  margin-bottom: 14rpx;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.result-meta {
+  margin-bottom: 10rpx;
+}
+
+.result-summary {
+  font-size: 26rpx;
+  color: var(--ink-2);
+  margin-bottom: 12rpx;
+  line-height: 1.6;
+}
+
+.result-source {
+  font-size: 22rpx;
+  color: var(--ink-3);
+}
+
+.empty-line {
+  display: block;
+}
+
+/* Selected design overrides. */
+.search-bar { margin: var(--section-gap) var(--page-gutter) 20rpx; height: var(--search-height); padding: 6rpx 6rpx 6rpx 22rpx; }
+.search-input { height: calc(var(--search-height) - 16rpx); line-height: calc(var(--search-height) - 16rpx); font-size: var(--body-size); }
+.search-btn { height: calc(var(--search-height) - 12rpx); padding: 0 26rpx; }
+.filter-row { padding-left: var(--page-gutter); padding-right: var(--page-gutter); overflow-x: auto; }
+.result-count { padding-left: var(--page-gutter); padding-right: var(--page-gutter); }

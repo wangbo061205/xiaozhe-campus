@@ -1,0 +1,52 @@
+<view class="root map-root {{gq}}">
+  <glass-nav title="校园地图" />
+  <map wx:if="{{mapReady}}" id="campus-map" class="campus-map" style="top:{{mapTop}}px;height:calc(100vh - {{mapTop + tabHeight}}px)" latitude="{{latitude}}" longitude="{{longitude}}" scale="{{scale}}" min-scale="5" max-scale="20" markers="{{markers}}" polyline="{{polyline}}" polygons="{{polygons}}" show-location="{{hasLocation}}" enable-satellite="{{satellite}}" enable-poi="{{true}}" enable-overlooking="{{false}}" enable-3D="{{false}}" bindmarkertap="onMarker" bindcallouttap="onMarker" bindupdated="onMapUpdated" />
+  <view class="map-toolbar" style="top:{{mapTop + 12}}px">
+    <view class="map-search">
+      <picker range="{{campuses}}" range-key="title" value="{{campusIndex}}" bindchange="onCampusChange" disabled="{{!campuses.length}}"><view class="map-campus-name"><text>{{campusName}}</text><image class="icon-sm" src="/assets/icons/chevron-down-green.png" /></view></picker>
+      <view class="search-divider"></view><input value="{{keyword}}" placeholder="{{mode === 'indoor' ? '搜索楼栋、教室' : '搜索校园地点'}}" bindinput="onKeyword" bindconfirm="search" confirm-type="search" />
+      <view wx:if="{{keyword}}" class="map-search-button" bindtap="clearSearch" aria-label="清除搜索"><image class="icon-sm" src="/assets/icons/x.png" /></view><view wx:else class="map-search-button" bindtap="search" aria-label="搜索"><image class="icon-sm" src="/assets/icons/search-green.png" /></view>
+    </view>
+    <view class="map-mode"><view class="map-mode-item {{mode === 'sites' ? 'active' : ''}}" data-mode="sites" bindtap="onMode"><image src="/assets/icons/map{{mode === 'sites' ? '-green' : ''}}.png" />校园地点</view><view class="map-mode-item {{mode === 'indoor' ? 'active' : ''}}" data-mode="indoor" bindtap="onMode"><image src="/assets/icons/layers{{mode === 'indoor' ? '-green' : ''}}.png" />室内地图</view></view>
+  </view>
+  <view class="map-tools" style="top:{{mapTop + 148}}px"><view bindtap="toggleSatellite" class="map-tool {{satellite ? 'active' : ''}}" aria-label="切换卫星地图"><image src="/assets/icons/layers{{satellite ? '-green' : ''}}.png" /></view><view bindtap="resetMap" class="map-tool" aria-label="校园与路线全览"><image src="/assets/icons/compass-green.png" /></view><view bindtap="onLocate" class="map-tool" aria-label="更新我的位置"><image src="/assets/icons/locate-fixed-green.png" /></view></view>
+  <view class="map-sheet" style="bottom:{{tabHeight}}px;height:{{sheetHeight}}px">
+    <view class="sheet-handle-area" catchtouchstart="onSheetStart" catchtouchmove="onSheetMove" catchtouchend="onSheetEnd" bindtap="cycleSheet"><view class="sheet-handle"></view></view>
+    <view class="sheet-heading {{categoryExpanded ? 'sheet-heading-categories' : ''}}">
+      <view class="sheet-title">{{categoryExpanded ? '全部分类' : (selected ? selected.title : (mode === 'indoor' ? '室内建筑' : (keyword ? '选择目的地' : '想去哪里')))}}</view>
+      <view wx:if="{{selected}}" class="sheet-close" bindtap="closeSelected" aria-label="关闭地点"><image class="icon-sm" src="/assets/icons/x.png" /></view>
+      <button wx:elif="{{categoryExpanded}}" class="map-category-done" bindtap="toggleCategories" aria-label="收起分类，返回地点列表">收起<image src="/assets/icons/chevron-down-green.png" /></button>
+      <text wx:else class="sheet-count">{{resultCount}} 个{{mode === 'indoor' ? '建筑' : '地点'}}</text>
+    </view>
+    <view wx:if="{{!selected && mode === 'sites' && !keyword && !categoryExpanded && !error}}" class="map-filter-bar">
+      <button class="map-filter-button {{!categoryId ? 'is-current' : ''}}" data-id="" bindtap="onCategory" aria-label="查看推荐地点" aria-pressed="{{!categoryId}}" disabled="{{loading || !mapReady}}"><image src="/assets/icons/compass-green.png" /><text>推荐地点</text><view wx:if="{{!categoryId}}" class="map-filter-dot"></view></button>
+      <button class="map-filter-button {{categoryId ? 'is-current' : ''}}" bindtap="toggleCategories" aria-label="{{categoryTitle ? '当前分类' + categoryTitle + '，打开全部分类' : '打开全部分类'}}" aria-expanded="{{categoryExpanded}}" disabled="{{loading || !categoryCount}}"><image src="/assets/icons/layers-green.png" /><text>{{categoryTitle || '全部分类'}}</text><image class="map-filter-chevron" src="/assets/icons/chevron-down-green.png" /></button>
+    </view>
+    <scroll-view wx:if="{{categoryExpanded}}" class="map-category-scroll" scroll-y enhanced>
+      <view class="map-category-intro">按类别找地点<text>{{categoryCount}} 个分类</text></view>
+      <view class="map-category-grid">
+        <button class="map-category-tile {{!categoryId ? 'is-current' : ''}}" data-id="" bindtap="onCategory" aria-label="推荐地点" aria-pressed="{{!categoryId}}">
+          <text class="map-category-name">推荐地点</text><view class="map-category-meta"><text>热门优先</text><image wx:if="{{!categoryId}}" src="/assets/icons/check-green.png" /></view>
+        </button>
+        <button wx:for="{{categories}}" wx:key="id" class="map-category-tile {{categoryId === item.id ? 'is-current' : ''}}" data-id="{{item.id}}" bindtap="onCategory" aria-label="{{item.title + '，' + item.count + '个地点'}}" aria-pressed="{{categoryId === item.id}}">
+          <text class="map-category-name">{{item.title}}</text><view class="map-category-meta"><text>{{item.count}} 个地点</text><image wx:if="{{categoryId === item.id}}" src="/assets/icons/check-green.png" /></view>
+        </button>
+      </view>
+    </scroll-view>
+    <scroll-view wx:else class="sheet-scroll" scroll-y enhanced>
+      <view wx:if="{{loading || searching}}" class="state-box">{{searching ? '正在搜索' : '正在加载地图'}}</view>
+      <view wx:elif="{{error}}" class="state-box map-connection-error" role="alert"><view class="state-title">{{error}}</view><button class="map-retry-button" bindtap="load" disabled="{{loading}}">重新加载</button></view>
+      <block wx:elif="{{selected}}">
+        <view class="selected-summary"><image wx:if="{{selected.cover}}" src="{{selected.cover}}" mode="aspectFill" /><view><text class="selected-category">{{selected.categoryName || campusName}}</text><view class="selected-description">{{selected.description || selected.aliases || '校园地点'}}</view><view class="selected-detail-link" bindtap="openDetail">地点详情<image class="icon-sm" src="/assets/icons/chevron-right-green.png" /></view></view></view>
+        <view class="route-start"><view class="route-origin-dot"></view><view class="route-origin-copy"><text>从我的当前位置出发</text><text class="route-location-state">{{locationError || locationStatus}}{{!locationError && locationTime ? ' · ' + locationTime : ''}}</text></view></view>
+        <view wx:if="{{routeError}}" class="route-error">{{routeError}}</view>
+        <view wx:if="{{routeNotice || offlineData || nativeNavigation}}" class="map-warning">{{routeNotice || '校园路线暂不可用，点击“出发”将打开微信地图'}}</view>
+        <view wx:if="{{route}}" class="route-summary"><text>{{route.distance}}</text><text wx:if="{{route.time}}">{{route.time}}</text><text class="route-overview-note">校园与路线全览</text></view>
+        <view wx:for="{{stepList}}" wx:key="id" class="route-step"><text>{{index + 1}}</text>{{item.text}}</view>
+      </block>
+      <block wx:else><view wx:if="{{!resultCount}}" class="state-box"><image src="/assets/icons/{{mode === 'indoor' ? 'layers' : 'search'}}.png" /><view class="state-title">{{mode === 'indoor' ? '暂无已发布室内地图' : '没有找到相关地点'}}</view></view><view class="place-result" wx:for="{{results}}" wx:key="viewKey" data-index="{{index}}" bindtap="onResult"><image wx:if="{{item.cover}}" class="place-cover" src="{{item.cover}}" mode="aspectFill" /><view wx:else class="place-symbol"><image src="/assets/icons/map-green.png" /></view><view class="place-main"><view class="place-title">{{item.title}}</view><view class="place-meta">{{item.categoryName || item.description || campusName}}</view></view><image class="icon-sm" src="/assets/icons/chevron-right.png" /></view></block>
+      <view wx:if="{{warning}}" class="map-warning">{{warning}}</view><view wx:if="{{offlineData}}" class="map-offline-state"><text>已保存的校园地点</text><button bindtap="load" disabled="{{syncing}}">{{syncing ? '同步中' : '重新连接'}}</button></view><view class="map-source">小北云校园 · 地图信息仅供参考</view>
+    </scroll-view>
+    <view wx:if="{{selected}}" class="route-actions"><button class="campus-route" bindtap="depart" disabled="{{routeLoading || !selected.point}}" loading="{{routeLoading}}" aria-label="从当前位置出发到所选目的地"><image wx:if="{{!routeLoading}}" class="icon-sm" src="/assets/icons/navigation-on-accent.png" />出发</button></view>
+  </view>
+</view>

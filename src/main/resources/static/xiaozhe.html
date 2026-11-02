@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#dfe4ee">
+  <meta name="description" content="小折，北方民族大学校园里的 AI 聊天助手。">
+  <title>小折 · 北方民族大学校园助手</title>
+  <link rel="stylesheet" href="/xiaozhe.css?v=3">
+  <script src="/xiaozhe.js?v=3" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#chat-input">跳到聊天输入框</a>
+  <div class="app-shell">
+    <header class="site-header">
+      <a class="brand" href="/xiaozhe.html" aria-label="小折校园助手首页">
+        <span class="brand-copy">
+          <span id="brand-name" class="brand-name">小折</span>
+          <span class="brand-subtitle">北方民族大学 · 校园来信</span>
+        </span>
+      </a>
+      <div class="header-rule" aria-hidden="true"><span>✦</span></div>
+      <p class="header-note">一封写给校园的信</p>
+      <a class="admin-link" href="/admin.html">管理后台 <span aria-hidden="true">↗</span></a>
+    </header>
+
+    <main class="workspace">
+      <aside class="side-note side-note--left" aria-label="小折介绍">
+        <div class="side-index"><span>LETTRE</span><span>01</span></div>
+        <div class="botanical-frame">
+          <img src="/assets/trianon-camellia.webp" alt="蓝白色山茶花插画" width="160" height="160">
+          <span class="image-caption">une petite fleur</span>
+        </div>
+        <p class="side-kicker">给正在校园里的你</p>
+        <h2>问题与心事，<br>都可以慢慢说。</h2>
+        <p class="side-copy">从校园办事、学习安排，到今天的心情。小折会认真听，也会尽量依据可靠资料回答。</p>
+        <div class="side-divider" aria-hidden="true"><span>✦</span><i></i><span>✦</span></div>
+        <p class="side-caption">AI 助手 · 温柔陪伴 · 校园知识</p>
+      </aside>
+
+      <section class="chat-sheet" aria-label="与小折对话">
+        <header class="sheet-header">
+          <div class="assistant-identity">
+            <div class="assistant-copy">
+              <p class="eyebrow">UNE LETTRE POUR VOUS</p>
+              <div class="assistant-title-row">
+                <h1 id="assistant-name">小折</h1>
+                <span id="connection-indicator" class="connection-indicator" data-state="loading" aria-hidden="true"></span>
+              </div>
+              <p id="assistant-status" class="assistant-status">校园里的倾听伙伴</p>
+            </div>
+          </div>
+          <button id="new-chat" class="new-chat-button" type="button" title="开始一段新对话">
+            <span aria-hidden="true">✧</span><span>新对话</span>
+          </button>
+        </header>
+
+        <div class="thread-heading">
+          <span class="thread-label">校园来信</span>
+          <div class="service-status">
+            <span id="service-status-text" role="status" aria-live="polite">正在连接校园服务</span>
+            <button id="retry-connection" class="retry-link" type="button" hidden>重试</button>
+          </div>
+        </div>
+
+        <div id="chat-body" class="chat-body" role="log" aria-label="对话内容" aria-live="polite" aria-relevant="additions text" tabindex="0">
+          <ol id="message-list" class="message-list"></ol>
+          <div id="typing-indicator" class="typing-row" hidden>
+            <span class="typing-bubble"><span class="typing-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>小折正在回信…</span></span>
+          </div>
+          <p id="request-error" class="request-error" role="alert" hidden></p>
+        </div>
+
+        <div id="quick-prompts" class="quick-prompts" aria-label="建议提问" hidden></div>
+
+        <form id="compose-form" class="composer">
+          <label class="sr-only" for="chat-input">输入你想和小折聊的内容</label>
+          <textarea id="chat-input" name="message" rows="1" maxlength="1000" placeholder="给小折写一封信…" enterkeyhint="send" autocomplete="off"></textarea>
+          <button id="send-button" class="send-button" type="submit" aria-label="发送消息" disabled>
+            <span class="send-label">发送</span><span class="send-arrow" aria-hidden="true">↗</span>
+          </button>
+        </form>
+        <p class="disclaimer"><span aria-hidden="true">✦</span><span id="disclaimer-text">内容由 AI 生成 · 校园信息请以学校最新官方发布为准</span></p>
+      </section>
+
+      <aside class="side-note side-note--right" aria-label="校园信息说明">
+        <div class="right-note-card">
+          <p class="side-kicker">DANS LE DOSSIER</p>
+          <h2>一页校园手记</h2>
+          <p>小折会在回答校园事实问题时，优先查找已发布的学校资料，并把引用来源放在回信下方。</p>
+          <div class="note-rule" aria-hidden="true"></div>
+          <ul class="topic-list">
+            <li><span>01</span>办事与校园信息</li>
+            <li><span>02</span>学习节奏与计划</li>
+            <li><span>03</span>心情与日常倾听</li>
+          </ul>
+        </div>
+        <p class="margin-note">重要事项请以学校最新通知为准。</p>
+      </aside>
+    </main>
+  </div>
+
+  <dialog id="source-dialog" class="source-dialog" aria-labelledby="source-title">
+    <form method="dialog"><button class="dialog-close" value="close" aria-label="关闭来源详情">×</button></form>
+    <p class="source-eyebrow">CAMPUS ARCHIVE · 校园资料</p>
+    <h2 id="source-title">资料标题</h2>
+    <p id="source-meta" class="source-meta"></p>
+    <div id="source-content" class="source-content"></div>
+    <a id="source-link" class="source-link" href="#" target="_blank" rel="noopener noreferrer" hidden>查看资料原文 ↗</a>
+  </dialog>
+</body>
+</html>

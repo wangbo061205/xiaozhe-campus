@@ -1,0 +1,17 @@
+<!-- 固定胶囊导航：右端给微信胶囊按钮让位 -->
+<view class="nav-fixed" style="padding-top:{{top}}px; padding-right:{{rightGap}}px">
+  <view class="nav-pill {{gq}}" style="height:{{barH}}px">
+    <view wx:if="{{back}}" class="nav-back nav-press" hover-class="nav-pressed"
+          hover-start-time="0" hover-stay-time="60" bindtap="onBack">
+      <image class="nav-back__icon" src="/assets/icons/arrow-left.png" />
+    </view>
+    <image wx:elif="{{!plain}}" class="nav-dot" src="/assets/icons/school-green.png" />
+    <view class="nav-title">{{title}}</view>
+    <button wx:if="{{action && actionButton}}" class="nav-action" hover-class="nav-pressed"
+            hover-start-time="0" hover-stay-time="60" bindtap="onAction">{{action}}</button>
+    <view wx:elif="{{action}}" class="nav-tail">{{action}}</view>
+  </view>
+</view>
+
+<!-- 等高占位，让页面内容从胶囊下方开始 -->
+<view class="nav-holder" style="height:{{totalH}}px"></view>

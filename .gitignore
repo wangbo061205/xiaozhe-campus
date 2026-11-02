@@ -1,0 +1,28 @@
+# 本地配置和凭证
+.env
+.env.*
+!**/.env.example
+!**/env.example
+.devtoken
+**/*-private.properties
+/config/application.yml
+**/project.private.config.json
+*.local.env
+# 构建产物和运行数据
+/node_modules/
+/target/
+/run/
+/logs/
+/data/
+*.log
+*.dump
+*.bak
+*.pid
+**/.DS_Store
+**/Thumbs.db
+**/desktop.ini
+# 编辑器和缓存
+.idea/
+.vscode/
+.tmp/
+.workbuddy/

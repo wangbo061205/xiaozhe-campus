@@ -1,0 +1,57 @@
+<view class="root {{gq}}">
+  <glass-bg />
+  <glass-nav title="人工服务" back />
+
+  <!-- 提交求助 -->
+  <view class="card">
+    <view class="section-title">🙋 找不到答案？提交人工求助</view>
+    <view class="help-hint">复杂、敏感或系统无法确认的问题，可以提交给相关服务窗口，工作人员会在工作时间处理。</view>
+
+    <view class="fb-row">
+      <view class="fb-chip {{category === item.value ? 'on' : ''}}" wx:for="{{categories}}" wx:key="value"
+            data-value="{{item.value}}" bindtap="onCategory">{{item.label}}</view>
+    </view>
+
+    <view class="form-item">
+      <input class="form-input" value="{{title}}" bindinput="onTitle" placeholder="一句话标题，如：校园卡余额未到账" placeholder-class="ph" maxlength="60" />
+    </view>
+    <textarea class="fb-textarea" placeholder="详细描述你的问题（不含密码等敏感信息；联系方式请勿填写完整手机号）"
+              value="{{detail}}" bindinput="onDetail" maxlength="500" />
+    <view class="form-item">
+      <input class="form-input" value="{{contactHint}}" bindinput="onContact" placeholder="联系提示（选填），如：站内留言联系" placeholder-class="ph" maxlength="50" />
+    </view>
+    <button class="btn-primary" bindtap="submit" disabled="{{submitting}}">{{submitting ? '提交中…' : '提交求助'}}</button>
+    <view class="help-tip">提交即代表你同意将上述内容共享给处理人员；聊天记录不会共享。</view>
+  </view>
+
+  <!-- 我的工单 -->
+  <view class="card">
+    <view class="section-title">📮 我的求助记录</view>
+    <view wx:if="{{loading}}" class="loading-box">加载中…</view>
+    <block wx:else>
+      <view wx:if="{{tickets.length === 0}}" class="empty">
+        <text class="empty-icon">🗂️</text>
+        <text>还没有提交过求助</text>
+      </view>
+      <view class="ticket-item glass-1" wx:for="{{tickets}}" wx:key="id">
+        <view class="ticket-head">
+          <text class="tag {{item.statusClass}}">{{item.statusName}}</text>
+          <text class="ticket-cat">{{item.categoryName}}</text>
+          <text class="ticket-time">{{item.timeText}}</text>
+        </view>
+        <view class="ticket-title">{{item.title}}</view>
+        <view wx:if="{{item.detail}}" class="ticket-detail">{{item.detail}}</view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 常用人工渠道 -->
+  <view class="card">
+    <view class="section-title">📞 常用人工渠道</view>
+    <view class="channel-item" wx:for="{{channels}}" wx:key="name">
+      <text class="channel-name">{{item.name}}</text>
+      <text class="channel-info">{{item.info}}</text>
+    </view>
+    <view class="help-tip">电话与时间来自知识库公开信息，办理以官方最新通知为准。</view>
+  </view>
+</view>

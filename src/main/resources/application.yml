@@ -1,0 +1,60 @@
+spring:
+  config:
+    import: optional:file:./config/xiaobei-private.properties
+  application:
+    name: campus-agent
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/campus
+    username: ${DB_USER:campus}
+    password: ${DB_PASSWORD:campus_dev_pwd}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    # 数据库暂时不可用（如 Docker 重启窗口）时重试连接
+    connect-retries: 20
+    connect-retries-interval: 5
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+  web:
+    resources:
+      cache:
+        cachecontrol:
+          max-age: 3600
+
+server:
+  port: 8080
+
+app:
+  upload:
+    lost-found-dir: ${LOST_FOUND_UPLOAD_DIR:./data/lost-found-images}
+  xiaobei:
+    base-url: ${XIAOBEI_BASE:https://xyadmin.tehii.top}
+    client-id: ${XIAOBEI_CLIENT_ID:}
+    client-secret: ${XIAOBEI_CLIENT_SECRET:}
+  jwt:
+    # 生产环境必须通过环境变量覆盖
+    secret: ${JWT_SECRET:please-change-me-0123456789abcdef0123456789abcdef}
+    expire-minutes: 120
+  llm:
+    provider: deepseek
+    deepseek:
+      base-url: ${DEEPSEEK_BASE_URL:https://api.deepseek.com}
+      api-key: ${DEEPSEEK_API_KEY:}
+      model: ${DEEPSEEK_MODEL:deepseek-chat}
+      timeout-seconds: 30
+      max-retries: 2
+    # 单次调用成本阈值（元），超过则告警
+    budget-daily-cny: 50
+  search:
+    max-results: 20
+
+logging:
+  level:
+    root: info
+    cn.edu.nun.campus: debug

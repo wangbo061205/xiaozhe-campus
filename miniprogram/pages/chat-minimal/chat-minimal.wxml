@@ -1,0 +1,97 @@
+<!-- chat-minimal —— 极简版校园 AI 对话界面（独立演示页，不依赖后端） -->
+<view class="page">
+  <!-- 顶栏：48px，标题 20px，右侧仅一个文字动作 -->
+  <view class="bar" style="padding-top:{{statusBar}}px">
+    <view class="bar__inner" style="height:{{navH}}px">
+      <view class="bar__title">小北</view>
+      <view class="bar__sub">校园助手</view>
+      <view class="bar__action" bindtap="onReset" hover-class="tapped" hover-stay-time="60">新对话</view>
+    </view>
+  </view>
+
+  <!-- 对话流 -->
+  <scroll-view
+    class="thread"
+    scroll-y
+    scroll-top="{{scrollTop}}"
+    scroll-with-animation
+    enable-back-to-top
+    show-scrollbar="{{false}}"
+  >
+    <view class="thread__inner">
+      <!-- 开场：小北的第一句 + 三个具体入口（首屏的实质内容） -->
+      <view class="msg msg--bot">
+        <view class="msg__mark"></view>
+        <view class="msg__body">
+          <text class="msg__text">{{opening}}</text>
+        </view>
+      </view>
+
+      <view wx:if="{{showStarters}}" class="starters">
+        <view
+          wx:for="{{starters}}"
+          wx:key="id"
+          class="starter"
+          data-index="{{index}}"
+          bindtap="onStarter"
+          hover-class="tapped"
+          hover-stay-time="60"
+        >
+          <text class="starter__text">{{item.text}}</text>
+        </view>
+      </view>
+
+      <!-- 消息 -->
+      <block wx:for="{{messages}}" wx:key="id">
+        <view wx:if="{{item.role === 'user'}}" class="msg msg--user">
+          <view class="msg__body">
+            <text class="msg__text">{{item.text}}</text>
+          </view>
+        </view>
+        <view wx:else class="msg msg--bot">
+          <view class="msg__mark"></view>
+          <view class="msg__body">
+            <text class="msg__text">{{item.text}}</text>
+          </view>
+        </view>
+      </block>
+
+      <view wx:if="{{typing}}" class="msg msg--bot">
+        <view class="msg__mark"></view>
+        <view class="msg__body">
+          <view class="typing">
+            <view class="typing__dot"></view>
+            <view class="typing__dot"></view>
+            <view class="typing__dot"></view>
+          </view>
+        </view>
+      </view>
+
+      <view class="thread__tail"></view>
+    </view>
+  </scroll-view>
+
+  <!-- 输入区：唯一主行动用近黑，输入框白面细边 -->
+  <view class="dock">
+    <view class="dock__field {{hasInput ? 'dock__field--active' : ''}}">
+      <input
+        class="dock__input"
+        value="{{input}}"
+        placeholder="{{placeholder}}"
+        placeholder-class="dock__ph"
+        maxlength="500"
+        confirm-type="send"
+        cursor-spacing="24"
+        bindinput="onInput"
+        bindconfirm="onSend"
+      />
+      <view
+        class="dock__send {{hasInput ? 'dock__send--on' : ''}}"
+        bindtap="onSend"
+        hover-class="dock__send--pressed"
+        hover-stay-time="60"
+      >发送</view>
+    </view>
+    <view class="footnote">内容由 AI 生成 · 信息以官方发布为准</view>
+  </view>
+</view>

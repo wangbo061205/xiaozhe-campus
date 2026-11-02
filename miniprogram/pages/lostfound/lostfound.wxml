@@ -1,0 +1,72 @@
+<view class="root root--tab {{gq}}">
+  <glass-bg />
+  <glass-nav title="失物招领" />
+
+  <!-- 广场 / 我的发布 -->
+  <view class="segment glass-2">
+    <view class="seg-item {{tab === 'plaza' ? 'on' : ''}}" data-tab="plaza" bindtap="onTab">广场</view>
+    <view class="seg-item {{tab === 'mine' ? 'on' : ''}}" data-tab="mine" bindtap="onTab">我的发布</view>
+  </view>
+
+  <!-- 类型筛选 -->
+  <view class="filter-row">
+    <view class="filter-chip press {{kind === '' ? 'on' : ''}}" hover-class="pressed"
+          hover-start-time="0" hover-stay-time="60" data-kind="" bindtap="onKind">全部</view>
+    <view class="filter-chip press {{kind === 'LOST' ? 'on' : ''}}" hover-class="pressed"
+          hover-start-time="0" hover-stay-time="60" data-kind="LOST" bindtap="onKind">寻物启事</view>
+    <view class="filter-chip press {{kind === 'FOUND' ? 'on' : ''}}" hover-class="pressed"
+          hover-start-time="0" hover-stay-time="60" data-kind="FOUND" bindtap="onKind">失物招领</view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading-box">加载中…</view>
+
+  <block wx:else>
+    <view wx:if="{{shown.length === 0}}" class="empty">
+      <text class="empty-icon">🎒</text>
+      <text>{{tab === 'mine' ? '你还没有发布过信息' : '暂无相关信息'}}</text>
+    </view>
+
+    <view class="card lf-item press" hover-class="pressed" hover-start-time="0" hover-stay-time="60"
+          wx:for="{{shown}}" wx:key="id" data-index="{{index}}" bindtap="onTap">
+      <image wx:if="{{item.cover}}" class="lf-cover" src="{{item.cover}}" mode="aspectFill" />
+      <view wx:else class="lf-symbol {{item.kind === 'FOUND' ? 'lf-symbol--found' : ''}}"><image src="/assets/icons/backpack-green.png" /></view>
+      <view class="lf-main">
+      <view class="lf-head">
+        <text class="tag {{item.kind === 'LOST' ? 'tag-lost' : 'tag-found'}}">{{item.kindName}}</text>
+        <text class="lf-title">{{item.title}}</text>
+      </view>
+      <view class="lf-desc">{{item.description}}</view>
+      <view class="lf-meta">
+        <text>📍 {{item.location || '地点未填'}}</text>
+        <text wx:if="{{item.imagePaths.length}}">{{item.imagePaths.length}} 张图片</text>
+        <text wx:if="{{item.statusName}}" class="lf-status">{{item.statusName}}</text>
+      </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 发布按钮 -->
+  <view class="publish-bar">
+    <view class="publish-btn press" hover-class="pressed" hover-start-time="0" hover-stay-time="60"
+          bindtap="goPublish">＋ 发布寻物 / 招领</view>
+  </view>
+
+  <block wx:if="{{selected}}">
+    <view class="lf-detail-mask" bindtap="closeDetail" catchtouchmove="stopDetailTouch"></view>
+    <view class="lf-detail-sheet">
+      <view class="lf-detail-heading"><text>物品详情</text><view class="lf-detail-close" bindtap="closeDetail" role="button" aria-label="关闭物品详情"><image src="/assets/icons/x.png" /></view></view>
+      <scroll-view class="lf-detail-scroll" scroll-y>
+        <view class="lf-detail-content">
+          <text class="tag {{selected.kind === 'LOST' ? 'tag-lost' : 'tag-found'}}">{{selected.kindName}}</text>
+          <view class="lf-detail-title">{{selected.title}}</view>
+          <view class="lf-detail-description">{{selected.description}}</view>
+          <view wx:if="{{loadingImages}}" class="photo-loading">正在加载图片…</view>
+          <view class="lf-detail-images" wx:if="{{detailImages.length}}"><image wx:for="{{detailImages}}" wx:key="*this" src="{{item}}" data-index="{{index}}" bindtap="previewImage" mode="aspectFill" /></view>
+          <view class="lf-detail-field"><text>地点</text><text>{{selected.location || '地点未填'}}</text></view>
+          <view class="lf-detail-field"><text>联系提示</text><text>{{selected.contactHint}}</text></view>
+          <view wx:if="{{selected.statusName}}" class="lf-detail-field"><text>状态</text><text>{{selected.statusName}}</text></view>
+        </view>
+      </scroll-view>
+    </view>
+  </block>
+</view>

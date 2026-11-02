@@ -1,0 +1,125 @@
+/* 办理进度 —— 玻璃版 */
+
+.run-head {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  margin-bottom: 14rpx;
+}
+
+.run-time {
+  margin-left: auto;
+  font-size: 22rpx;
+  color: var(--ink-3);
+}
+
+.run-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.5;
+  margin-bottom: 10rpx;
+}
+
+.run-sub {
+  font-size: 23rpx;
+  color: var(--ink-3);
+  line-height: 1.7;
+}
+
+.check-item {
+  display: flex;
+  align-items: center;
+  padding: 22rpx 24rpx;
+  border-radius: var(--content-radius);
+  margin-bottom: 14rpx;
+  transition: opacity var(--dur-press, 158ms) var(--ease, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.check-box {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: var(--content-radius);
+  border: 2rpx solid var(--campus-line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26rpx;
+  color: var(--campus-on-accent);
+  margin-right: 20rpx;
+  flex: 0 0 auto;
+}
+
+.check-item.checked .check-box {
+  background: var(--primary);
+  border-color: transparent;
+}
+
+.check-item.checked .check-text {
+  color: var(--ink-3);
+  text-decoration: line-through;
+}
+
+.check-text {
+  flex: 1;
+  font-size: 28rpx;
+  color: var(--ink);
+  line-height: 1.6;
+}
+
+.run-empty {
+  font-size: 25rpx;
+  color: var(--ink-3);
+  line-height: 1.7;
+}
+
+.run-content {
+  font-size: var(--body-size);
+  line-height: 1.9;
+  color: var(--ink);
+  white-space: pre-wrap;
+}
+
+.run-actions {
+  display: flex;
+  gap: 18rpx;
+}
+
+.run-btn {
+  flex: 1;
+  text-align: center;
+  padding: 24rpx 0;
+  border-radius: var(--content-radius);
+  font-size: 28rpx;
+  font-weight: 500;
+}
+
+.run-btn.ghost {
+  background: var(--campus-canvas);
+  color: var(--ink-2);
+  box-shadow: none;
+}
+
+.run-btn.primary {
+  background: var(--primary);
+  color: var(--campus-on-accent);
+  box-shadow: none;
+}
+
+.run-tip {
+  font-size: 22rpx;
+  color: var(--ink-3);
+  margin-top: 18rpx;
+  text-align: center;
+  line-height: 1.7;
+}
+
+.run-done {
+  font-size: 30rpx;
+  color: var(--ink);
+  text-align: center;
+  padding: 16rpx 0 28rpx;
+}
+
+/* Selected design overrides. */
+.check-box { color: var(--campus-on-accent); border-color: var(--campus-line); }

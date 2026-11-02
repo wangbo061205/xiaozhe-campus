@@ -1,0 +1,56 @@
+<view class="root {{gq}}">
+  <glass-bg />
+  <glass-nav title="办理进度" back />
+
+  <view wx:if="{{loading}}" class="loading-box">加载中…</view>
+
+  <block wx:else>
+    <view wx:if="{{error}}" class="empty">
+      <text class="empty-icon">📭</text>
+      <text>{{error}}</text>
+    </view>
+
+    <block wx:else>
+      <!-- 事项头 -->
+      <view class="card glass-3">
+        <view class="run-head">
+          <text class="tag {{statusClass}}">{{statusName}}</text>
+          <text class="run-time">开始于 {{startedText}}</text>
+        </view>
+        <view class="run-title">{{run.title}}</view>
+        <view class="run-sub">材料勾选与进度仅你自己可见，可随时回来继续。</view>
+      </view>
+
+      <!-- 材料清单 -->
+      <view class="card">
+        <view class="section-title">📋 材料清单（{{checkedCount}}/{{materials.length}} 已备）</view>
+        <view wx:if="{{materials.length === 0}}" class="run-empty">该事项未配置结构化材料清单，请查看下方指南原文。</view>
+        <view class="check-item glass-1 {{item.checked ? 'checked' : ''}}" wx:for="{{materials}}" wx:key="name"
+              data-index="{{index}}" bindtap="toggleMaterial">
+          <view class="check-box">{{item.checked ? '✓' : ''}}</view>
+          <text class="check-text">{{item.name}}</text>
+        </view>
+      </view>
+
+      <!-- 办理指南 -->
+      <view class="card">
+        <view class="section-title">📖 办理流程</view>
+        <view class="run-content">{{run.content}}</view>
+      </view>
+
+      <!-- 操作 -->
+      <view class="card" wx:if="{{run.status === 'in_progress'}}">
+        <view class="run-actions">
+          <view class="run-btn ghost press" hover-class="pressed" hover-start-time="0" hover-stay-time="60" bindtap="abandon">放弃办理</view>
+          <view class="run-btn primary press" hover-class="pressed" hover-start-time="0" hover-stay-time="60" bindtap="finish">标记办理完成</view>
+        </view>
+        <view class="run-tip">标记完成后可在「我的 → 我的办理」里回看；信息以官方窗口要求为准。</view>
+      </view>
+
+      <view class="card" wx:else>
+        <view class="run-done">{{run.status === 'done' ? '🎉 已完成办理，恭喜！' : '已放弃办理，可重新开始。'}}</view>
+        <view class="run-btn primary press" hover-class="pressed" hover-start-time="0" hover-stay-time="60" bindtap="backToDetail">回看指南详情</view>
+      </view>
+    </block>
+  </block>
+</view>

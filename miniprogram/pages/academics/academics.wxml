@@ -1,0 +1,41 @@
+<view class="root academic-root {{gq}}">
+  <glass-bg /><glass-nav title="我的教务" back />
+  <view class="academic-header"><view class="academic-title">我的教务</view><view class="academic-heading-action" bindtap="goTimetable"><image class="icon-sm" src="/assets/icons/calendar-days-green.png" /><text>{{returnToCourses ? '返回导入课表' : '我的课表'}}</text></view></view>
+  <block>
+    <view class="academic-tabs"><view wx:for="{{tabs}}" wx:key="key" class="academic-tab {{tab === item.key ? 'active' : ''}}" data-key="{{item.key}}" bindtap="onTab">{{item.label}}</view></view>
+    <view wx:if="{{statusError}}" class="academic-error">{{statusError}}<text bindtap="loadStatus">重新加载</text></view>
+    <view wx:if="{{error}}" class="academic-error">{{error}}<text wx:if="{{bound && tab !== 'account'}}" bindtap="loadData">重新加载</text></view>
+    <view wx:if="{{loading}}" class="state-box">正在读取教务数据</view>
+    <block wx:elif="{{!statusError && (!bound || tab === 'account')}}">
+      <view wx:if="{{session.bound || share.linked}}" class="surface-section">
+        <view class="section-title">教务关联</view>
+        <view wx:if="{{session.bound}}" class="binding-row"><view><view class="binding-title">独立教务会话</view><view class="subtle">{{session.status === 'active' ? '已关联' : session.status}}</view></view><button class="unlink-button" data-kind="session" bindtap="revoke" disabled="{{revoking}}">解除</button></view>
+        <view wx:if="{{share.linked}}" class="binding-row"><view><view class="binding-title">小北云共享授权</view><view class="subtle">{{scopesText}}</view></view><button class="unlink-button" data-kind="share" bindtap="revoke" disabled="{{revoking}}">撤销</button></view>
+      </view>
+      <view class="surface-section binding-form">
+        <view class="section-title">{{bound ? '添加关联' : '关联个人教务'}}</view>
+        <view class="segment"><view class="segment-item {{bindMode === 'share' ? 'active' : ''}}" data-mode="share" bindtap="onBindMode">授权码关联</view><view class="segment-item {{bindMode === 'independent' ? 'active' : ''}}" data-mode="independent" bindtap="onBindMode">教务账号登录</view></view>
+        <block wx:if="{{bindMode === 'share'}}"><view class="form-item"><view class="form-label">小北云一次性授权码</view><input class="form-input" value="{{shareCode}}" data-field="shareCode" bindinput="onForm" placeholder="xsh_ 开头的授权码" maxlength="256" /></view></block>
+        <block wx:else>
+          <view class="form-item"><view class="form-label">学号</view><input class="form-input" value="{{studentNo}}" data-field="studentNo" bindinput="onForm" placeholder="请输入教务学号" maxlength="64" /></view>
+          <view class="form-item"><view class="form-label">教务密码</view><input class="form-input" password value="{{password}}" data-field="password" bindinput="onForm" placeholder="请输入教务密码" maxlength="256" /></view>
+          <view class="form-item"><view class="form-label">验证码</view><view class="captcha-row"><input class="form-input" value="{{authcode}}" data-field="authcode" bindinput="onForm" placeholder="图形验证码" maxlength="12" /><view class="captcha-image-box" bindtap="loadCaptcha"><image wx:if="{{captchaImage}}" src="{{captchaImage}}" mode="aspectFit" /><text wx:else>{{captchaLoading ? '加载中' : '获取验证码'}}</text></view></view><view wx:if="{{captchaError}}" class="captcha-error">{{captchaError}}</view></view>
+          <checkbox-group bindchange="onConsent"><label class="consent-row"><checkbox value="agree" checked="{{consent}}" color="{{consentColor}}" /><text>同意教务数据处理说明</text></label></checkbox-group>
+          <view class="privacy-note">登录凭据由小北云校园处理，其服务会保存加密凭据以维持教务会话。本小程序不在本地保存教务密码。</view>
+        </block>
+        <button class="btn-primary bind-submit" bindtap="bind" disabled="{{submitting}}">{{submitting ? '关联中' : (bindMode === 'share' ? '确认关联' : '登录教务')}}</button>
+      </view>
+    </block>
+    <block wx:elif="{{!statusError}}">
+      <view class="data-toolbar"><view class="semester-label" wx:if="{{tab === 'schedule'}}">{{semester || '个人课表'}}</view><picker wx:elif="{{tab === 'grades'}}" range="{{semesters}}" value="{{semesterIndex}}" bindchange="onSemester"><view class="semester-label">{{semesters[semesterIndex]}}<image class="icon-sm" src="/assets/icons/chevron-down.png" /></view></picker><view wx:else class="semester-label">教务成绩汇总</view><view wx:if="{{session.bound}}" class="sync-action" bindtap="sync"><image class="icon-sm" src="/assets/icons/refresh-cw-green.png" />{{syncing ? '同步中' : '同步'}}</view></view>
+      <block wx:if="{{tab === 'schedule'}}">
+        <view class="week-strip"><view wx:for="{{days}}" wx:key="*this" class="week-day {{dayIndex === index ? 'active' : ''}}" data-index="{{index}}" bindtap="onDay">{{item}}</view></view>
+        <view wx:if="{{!shownCourses.length && !error}}" class="state-box"><image src="/assets/icons/coffee.png" /><view class="state-title">当天没有课程</view></view>
+        <view class="course-row" wx:for="{{shownCourses}}" wx:key="id"><view class="course-section">{{item.startSection}}<text wx:if="{{item.endSection !== item.startSection}}">-{{item.endSection}}</text><view>节</view></view><view class="course-main"><view class="course-name">{{item.name}}</view><view class="course-classroom" data-classroom="{{item.classroom}}" bindtap="mapClassroom"><image class="icon-sm" src="/assets/icons/map-green.png" />{{item.classroom || '教室待定'}}</view><view class="course-meta">{{item.teacher}}<text wx:if="{{item.weekText}}"> · {{item.weekText}}</text></view></view></view>
+      </block>
+      <block wx:elif="{{tab === 'grades'}}"><view wx:if="{{!grades.length && !error}}" class="state-box">暂无成绩</view><view class="grade-record" wx:for="{{grades}}" wx:key="id"><view class="grade-name">{{item.name}}</view><view class="subtle">{{item.semester}}</view><view class="grade-fields"><view class="grade-field" wx:for="{{item.fields}}" wx:key="label" wx:for-item="field"><text>{{field.label}}</text><text>{{field.value}}</text></view></view></view></block>
+      <block wx:elif="{{tab === 'summary'}}"><view wx:if="{{!summaryRows.length && !error}}" class="state-box">暂无汇总数据</view><view class="summary-list"><view class="summary-row" wx:for="{{summaryRows}}" wx:key="label"><text>{{item.label}}</text><text selectable>{{item.value}}</text></view></view><view wx:if="{{rule}}" class="summary-rule">{{rule}}</view></block>
+      <view class="source-note">小北云校园 · 教务原始数据<text wx:if="{{dataUpdated}}"> · {{dataUpdated}} 更新</text></view>
+    </block>
+  </block>
+</view>

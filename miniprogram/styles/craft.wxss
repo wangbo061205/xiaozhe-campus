@@ -1,0 +1,149 @@
+/* Derived radii keep inset content concentric while preserving the chosen inner radius. */
+page { font-variant-numeric: lining-nums tabular-nums; font-feature-settings: "tnum" 1; }
+.root .card { padding: var(--surface-inset); border-radius: var(--surface-radius); border: 0; box-shadow: var(--surface-shadow); }
+.root .lf-item { --surface-inset: 24rpx; }
+.root .today-band { --surface-inset: 24rpx; border: 0; border-radius: var(--surface-radius); box-shadow: var(--surface-shadow); }
+.root .lf-detail-sheet { border: 0; border-radius: calc(var(--content-radius) + 24rpx); box-shadow: 0 2rpx 6rpx rgba(0,0,0,.04), 0 16rpx 44rpx rgba(0,0,0,.09), 0 40rpx 100rpx -28rpx rgba(0,0,0,.15); }
+.root .map-sheet { border-top: 0; border-radius: calc(var(--content-radius) + var(--page-gutter)) calc(var(--content-radius) + var(--page-gutter)) 0 0; box-shadow: 0 -2rpx 6rpx rgba(0,0,0,.025), 0 -12rpx 40rpx rgba(0,0,0,.07); }
+.root .map-search { border: 0; background-image: linear-gradient(rgba(255,255,255,var(--glass-coat)),rgba(255,255,255,var(--glass-coat))); box-shadow: 0 2rpx 4rpx rgba(0,0,0,.025), 0 12rpx 32rpx rgba(0,0,0,.055), 0 32rpx 60rpx -20rpx rgba(0,0,0,var(--glass-shadow)), inset 0 0 0 1px rgba(255,255,255,var(--glass-highlight)); }
+.root .map-tool { border: 0; box-shadow: var(--surface-shadow); }
+.banner-title, .section-title, .activity-title, .notice-title, .lf-title, .lf-detail-title, .user-name, .detail-title, .today-title { text-wrap: balance; overflow-wrap: break-word; }
+.banner-date, .sheet-count, .course-time, .route-summary, .photo-heading>text { font-variant-numeric: lining-nums tabular-nums; }
+.photo-heading>text { min-width: 80rpx; text-align: right; }
+.sheet-count { min-width: 80rpx; text-align: right; }
+@keyframes campus-reveal { from { opacity: 0; transform: translateY(10rpx); } to { opacity: 1; transform: translateY(0); } }
+.banner-content>view, .quick-item, .section-head, .activity-item, .notice-item, .today-band>view, .user-card>view, .service-item, .lf-item, .card>.section-title, .card>.kind-row, .card>.form-item, .card>.submit-btn { animation: campus-reveal var(--reveal-duration) backwards; }
+.banner-content>view:nth-child(2), .quick-item:nth-child(2), .service-item:nth-child(2), .notice-item:nth-child(2), .lf-item:nth-child(2), .user-card>view:nth-child(2), .card>.form-item:nth-child(3) { animation-delay: 35ms; }
+.banner-content>view:nth-child(3), .quick-item:nth-child(3), .service-item:nth-child(3), .notice-item:nth-child(3), .lf-item:nth-child(3), .user-card>view:nth-child(3), .card>.form-item:nth-child(4) { animation-delay: 70ms; }
+.quick-item:nth-child(4), .service-item:nth-child(4), .card>.form-item:nth-child(5) { animation-delay: 105ms; }
+.quick-item:nth-child(5), .service-item:nth-child(5), .card>.form-item:nth-child(6) { animation-delay: 140ms; }
+.quick-item:nth-child(6), .service-item:nth-child(6), .card>.form-item:nth-child(7) { animation-delay: 175ms; }
+.quick-item:nth-child(7) { animation-delay: 210ms; }
+.quick-item:nth-child(8) { animation-delay: 245ms; }
+.motion-reduced .banner-content>view, .motion-reduced .quick-item,
+.motion-reduced .section-head, .motion-reduced .activity-item,
+.motion-reduced .notice-item, .motion-reduced .today-band>view,
+.motion-reduced .user-card>view, .motion-reduced .service-item,
+.motion-reduced .lf-item, .motion-reduced .card>.section-title,
+.motion-reduced .card>.kind-row, .motion-reduced .card>.form-item,
+.motion-reduced .card>.submit-btn,
+.gq-low .quick-item, .gq-low .service-item { animation: none !important; }
+.high-contrast .card, .high-contrast .map-tool, .high-contrast .map-search { border: 2rpx solid var(--ink-2); box-shadow: none; }
+@media (prefers-reduced-motion: reduce) {
+  .banner-content>view, .quick-item, .section-head, .activity-item,
+  .notice-item, .today-band>view, .user-card>view, .service-item,
+  .lf-item, .card>.section-title, .card>.kind-row,
+  .card>.form-item, .card>.submit-btn { animation: none !important; }
+}
+@media (prefers-contrast: more) { .root .card, .root .map-tool { border: 2rpx solid var(--ink-2); box-shadow: none; } }
+
+/* A shared material for actions. No extra nodes or hit-area changes are needed.
+   WXSS approximates refractive folds with static inset light/dark ridges;
+   real background displacement remains a Web-only effect. */
+.root {
+  --control-glass-fill: rgba(var(--glass-rgb), var(--glass-fill));
+  --control-glass-coat: var(--glass-coat);
+  --control-glass-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  --control-glass-border: 0;
+  --control-glass-shadow: 0 1rpx 3rpx rgba(24,50,83,.035), 0 8rpx 20rpx rgba(24,50,83,.055), 0 20rpx 36rpx -20rpx rgba(24,50,83,.10), inset 0 0 0 1px rgba(255,255,255,var(--glass-highlight)), inset 2px 1px 1px rgba(255,255,255,calc(var(--glass-coat) * 1.4)), inset -2px -2px 1px rgba(24,50,83,calc(var(--glass-coat) * .6));
+  background: var(--campus-canvas);
+}
+.root button[class],
+.root .btn-ghost, .root .hot-chip, .root .filter-chip, .root .fb-chip,
+.root .suggest-chip, .root .segment-item, .root .seg-item, .root .kind-item,
+.root .quick-symbol, .root .service-symbol,
+.root .search-btn, .root .search-action, .root .search-trigger,
+.root .send-btn, .root .publish-btn, .root .todo-add-btn,
+.root .action-btn, .root .start-btn, .root .draft-gen-btn, .root .draft-btn,
+.root .draft-close, .root .run-btn, .root .detail-link,
+.root .map-tool, .root .map-search-button, .root .sheet-close,
+.root .lf-detail-close, .root .photo-remove, .root .photo-add,
+.root .floor-tab, .root .week-day, .root .map-category,
+.root .category-option, .root .meal-select, .root .campus-select,
+.root .section-action, .root .academic-heading-action, .root .sync-action,
+.root .logout-btn, .root .todo-act, .root .state-action {
+  background-color: var(--control-glass-fill);
+  background-image: linear-gradient(rgba(255,255,255,var(--control-glass-coat)),rgba(255,255,255,var(--control-glass-coat)));
+  border: var(--control-glass-border);
+  border-radius: var(--content-radius);
+  box-shadow: var(--control-glass-shadow);
+  backdrop-filter: var(--control-glass-filter);
+  -webkit-backdrop-filter: var(--control-glass-filter);
+  color: var(--ink);
+  text-shadow: none;
+}
+/* Use one quiet tint and a weight change to express selection. */
+.root .filter-chip.on, .root .fb-chip.on, .root .segment-item.active,
+.root .seg-item.on, .root .kind-item.on, .root .floor-tab.active,
+.root .week-day.active, .root .map-category.active, .root .map-tool.active,
+.root .category-option.active {
+  background-color: var(--control-glass-fill);
+  background-image: linear-gradient(rgba(255,255,255,var(--control-glass-coat)),rgba(255,255,255,var(--control-glass-coat)));
+  color: var(--campus-accent-ink);
+  box-shadow: var(--control-glass-shadow);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6rpx;
+}
+.root button.btn-primary, .root .start-btn, .root .publish-btn,
+.root .send-btn, .root .search-btn, .root .todo-add-btn,
+.root .draft-gen-btn, .root .draft-btn.primary, .root .run-btn.primary,
+.root button.campus-route {
+  color: var(--campus-accent-ink);
+  font-weight: 600;
+  background-color: var(--control-glass-fill);
+  background-image: linear-gradient(rgba(255,255,255,var(--control-glass-coat)),rgba(255,255,255,var(--control-glass-coat)));
+  box-shadow: var(--control-glass-shadow);
+}
+.root .draft-btn.ghost, .root .run-btn.ghost {
+  background-color: var(--control-glass-fill);
+  background-image: linear-gradient(rgba(255,255,255,var(--control-glass-coat)),rgba(255,255,255,var(--control-glass-coat)));
+  box-shadow: var(--control-glass-shadow);
+}
+.root .segment { border-radius: calc(var(--content-radius) + 6rpx); }
+.root .photo-remove, .root .sheet-close, .root .lf-detail-close { border-radius: 50%; }
+.root .lf-detail-close { justify-content: center; }
+.root .section-action, .root .academic-heading-action, .root .sync-action,
+.root .meal-select { padding-left: 14rpx; padding-right: 14rpx; }
+.root .map-category { margin-right: 12rpx; }
+.root .category-option { padding-left: 12rpx; padding-right: 12rpx; }
+.root .draft-close, .root .floor-tab { display: inline-block; }
+.root .map-tool.active { outline: 1px solid var(--campus-accent-ink); outline-offset: -5px; }
+.root .run-btn.ghost, .root button.unlink-button { color: var(--signal-ink); }
+/* Keep the bundled campus photo visible and use a quiet surface if loading fails. */
+.root .campus-banner { background: var(--campus-tone-green); }
+.root .banner-content { color: var(--ink); }
+.root .campus-banner--photo .banner-content { color: #fff; text-shadow: 0 1rpx 4rpx rgba(24,50,83,.35); }
+.root .campus-banner--photo .campus-select { background-color: var(--campus-surface); }
+.root .campus-select { color: var(--ink); }
+/* Disabled controls remain recognisable, without bright highlights or blur. */
+.root button[disabled], .root .send-btn.disabled, .root .draft-gen-btn.disabled {
+  background: var(--campus-canvas) !important;
+  color: var(--ink-3) !important;
+  box-shadow: none !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  opacity: .55;
+}
+.root button::after { border: 0; }
+.root.gq-low {
+  --control-glass-fill: var(--campus-glass);
+  --control-glass-coat: 0;
+  --control-glass-filter: none;
+  --control-glass-shadow: 0 1rpx 3rpx rgba(24,50,83,.035), 0 6rpx 16rpx rgba(24,50,83,.055), inset 0 0 0 1px rgba(255,255,255,.45);
+}
+.root.high-contrast {
+  --control-glass-fill: var(--campus-surface);
+  --control-glass-coat: 0;
+  --control-glass-filter: none;
+  --control-glass-shadow: none;
+  --control-glass-border: 1px solid var(--ink);
+}
+.root.motion-reduced .press { transition: none; }
+@media (prefers-reduced-transparency: reduce) {
+  .root { --control-glass-fill: var(--campus-surface); --control-glass-coat: 0; --control-glass-filter: none; --control-glass-shadow: 0 2rpx 6rpx rgba(24,50,83,.07); }
+}
+@media (prefers-contrast: more) {
+  .root { --control-glass-fill: var(--campus-surface); --control-glass-coat: 0; --control-glass-filter: none; --control-glass-shadow: none; --control-glass-border: 1px solid var(--ink); }
+}

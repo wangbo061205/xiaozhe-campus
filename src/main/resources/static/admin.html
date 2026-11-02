@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#F3F7FC">
+  <title>校园管理平台 · 北方民族大学</title>
+  <link rel="stylesheet" href="/admin.css">
+  <script src="/admin.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#page-content">跳到主要内容</a>
+  <main id="login-view" class="login-view">
+    <section class="login-story" aria-labelledby="login-heading">
+      <a class="brand" href="/admin.html"><span class="brand-mark" data-icon="school"></span><span>校园管理平台<small>北方民族大学</small></span></a>
+      <div class="story-content"><span class="eyebrow">CAMPUS CONSOLE</span><h1 id="login-heading">让校园信息，<br>及时有序。</h1><p>集中处理内容审核与服务工单，<br>把每一件校园小事妥善安排。</p><div class="story-functions"><span data-icon="check"></span><span>内容审核</span><i></i><span>服务处理</span><i></i><span>知识维护</span></div></div>
+      <span class="story-footer">校园助手 · 管理工作台</span>
+      <div class="story-decoration" aria-hidden="true"><div></div><div></div><div></div></div>
+    </section>
+    <section class="login-form-area" aria-labelledby="signin-heading">
+      <form id="login-form" class="login-form">
+        <span class="login-symbol" data-icon="shield"></span><span class="eyebrow">欢迎回来</span><h2 id="signin-heading">登录管理工作台</h2><p class="form-intro">请使用管理员或审核员账号登录。</p>
+        <label for="username">管理员账号</label><div class="input-with-icon"><span data-icon="user"></span><input id="username" name="username" autocomplete="username" placeholder="输入管理员账号" required maxlength="64"></div>
+        <label for="password">密码</label><div class="input-with-icon"><span data-icon="lock"></span><input id="password" name="password" type="password" autocomplete="current-password" placeholder="输入密码" required><button type="button" id="toggle-password" class="icon-button password-toggle" aria-label="显示密码" aria-pressed="false" data-icon="eye"></button></div>
+        <p id="login-error" class="inline-error" role="alert" hidden></p>
+        <button id="login-submit" class="button primary login-submit" type="submit"><span>登录工作台</span><span data-icon="arrow"></span></button>
+        <div class="login-note"><span data-icon="shield"></span><span>管理权限仅用于内容审核与校园服务运营。</span></div>
+      </form>
+      <span class="login-copyright">北方民族大学 · 校园管理平台</span>
+    </section>
+  </main>
+  <div id="workspace" class="workspace" hidden>
+    <aside class="sidebar">
+      <a class="brand" href="/admin.html"><span class="brand-mark" data-icon="school"></span><span>校园管理平台<small>北方民族大学</small></span></a>
+      <p class="nav-caption">工作台</p>
+      <nav id="main-nav" aria-label="管理导航">
+        <button data-page="overview" aria-current="page"><span data-icon="grid"></span><span>运营概览</span></button>
+        <button data-page="lostfound"><span data-icon="bag"></span><span>失物招领</span></button>
+        <button data-page="feedback"><span data-icon="message"></span><span>用户反馈</span></button>
+        <button data-page="tickets"><span data-icon="ticket"></span><span>服务工单</span></button>
+        <button data-page="knowledge"><span data-icon="book"></span><span>知识库</span></button>
+        <button data-page="assistant" data-admin-only hidden><span data-icon="message"></span><span>小折助手设置</span></button>
+      </nav>
+      <div class="sidebar-note"><span data-icon="shield"></span><div><strong>专注校园服务</strong><p>内容有来源，处理有回应。</p></div></div>
+      <div class="sidebar-bottom"><span class="status-dot"></span><span>校园助手管理端</span><span>v1.0</span></div>
+    </aside>
+    <div class="main-shell">
+      <header class="topbar"><div class="breadcrumb"><span>管理工作台</span><span class="breadcrumb-divider">/</span><strong id="breadcrumb-current">运营概览</strong></div><div class="account"><span class="account-avatar" data-icon="user"></span><div><strong id="account-name"></strong><span id="account-role"></span></div><button id="logout-button" class="icon-button" aria-label="退出登录" title="退出登录" data-icon="logout"></button></div></header>
+      <main id="page-content" class="page-content" tabindex="-1" aria-live="polite"></main>
+      <footer class="page-footer"><span>北方民族大学 · 校园管理平台</span><span>让服务更及时，让信息更清晰</span></footer>
+    </div>
+  </div>
+  <dialog id="knowledge-dialog" class="editor-dialog" aria-labelledby="editor-title">
+    <form id="knowledge-form"><header class="dialog-header"><div><span class="eyebrow">内容管理</span><h2 id="editor-title">新建知识条目</h2></div><button type="button" class="icon-button" data-close="knowledge-dialog" aria-label="关闭条目编辑" data-icon="close"></button></header>
+      <div class="editor-fields"><div class="form-grid"><label>内容类型<select name="type" required><option value="NOTICE">通知公告</option><option value="POLICY">政策文件</option><option value="GUIDE">办事指南</option><option value="FAQ">常见问题</option><option value="SERVICE">校园服务</option><option value="PLACE">校园地点</option><option value="DEPARTMENT">学校部门</option></select></label><label>所属部门<input name="department" maxlength="255" placeholder="如：学生工作部"></label></div>
+      <label>标题 <span class="required">*</span><input name="title" required maxlength="255" placeholder="清晰、简洁地描述内容"></label>
+      <div class="form-grid"><label>来源名称<input name="sourceName" maxlength="255" placeholder="如：教务处"></label><label>来源链接<input name="sourceUrl" type="url" maxlength="1024" placeholder="https://"></label></div>
+      <label>内容摘要<textarea name="summary" rows="2" maxlength="500" placeholder="可选，用于列表中的简短介绍"></textarea></label>
+      <label>正文 <span class="required">*</span><textarea name="content" rows="8" required placeholder="填写完整、准确的内容"></textarea></label>
+      <label id="materials-field">所需材料 <span class="field-hint">每行一项，仅用于办事指南</span><textarea name="materials" rows="3" placeholder="如：学生证&#10;申请表"></textarea></label>
+      <label class="checkbox-label"><input name="official" type="checkbox"><span>标记为官方来源</span></label><p id="editor-error" class="inline-error" role="alert" hidden></p></div>
+      <footer class="dialog-footer"><button type="button" class="button" data-close="knowledge-dialog">取消</button><button id="save-knowledge" type="submit" name="save" value="save" class="button">保存待发布</button><button id="publish-knowledge" type="submit" name="publish" value="publish" class="button primary"><span data-icon="upload"></span><span>保存并发布</span></button></footer>
+    </form>
+  </dialog>
+  <dialog id="image-dialog" class="image-dialog" aria-labelledby="image-title"><header class="image-header"><h2 id="image-title">物品图片</h2><button class="icon-button" data-close="image-dialog" aria-label="关闭图片预览" data-icon="close"></button></header><img id="preview-image" alt="物品大图"></dialog>
+  <dialog id="confirm-dialog" class="confirm-dialog" aria-labelledby="confirm-title"><span class="confirm-symbol" data-icon="alert"></span><h2 id="confirm-title"></h2><p id="confirm-description"></p><div class="dialog-footer"><button id="confirm-cancel" class="button">取消</button><button id="confirm-proceed" class="button danger">确认下架</button></div></dialog>
+  <div id="toast-region" class="toast-region" role="status" aria-live="polite"></div>
+</body>
+</html>

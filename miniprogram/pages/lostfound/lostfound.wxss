@@ -1,0 +1,139 @@
+/* 失物招领 —— 玻璃版 */
+
+/* ── 分段控件（玻璃胶囊 + 滑动指示）── */
+.segment {
+  display: flex;
+  margin: 4rpx 24rpx 16rpx;
+  padding: 8rpx;
+  border-radius: var(--content-radius);
+}
+
+.seg-item {
+  flex: 1;
+  text-align: center;
+  font-size: 28rpx;
+  color: var(--ink-2);
+  padding: 18rpx 0;
+  border-radius: var(--content-radius);
+  transition: color var(--dur-switch) var(--ease), background var(--dur-switch) var(--ease);
+}
+
+.seg-item.on {
+  color: var(--campus-accent-ink);
+  font-weight: 600;
+  background: var(--campus-canvas);
+  box-shadow: none;
+}
+
+/* ── 筛选 chip ── */
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  padding: 4rpx 24rpx 8rpx;
+}
+
+.filter-chip {
+  margin-bottom: 0;
+}
+
+/* ── 列表项 ── */
+.lf-item {
+  margin-top: 18rpx;
+}
+
+.lf-head {
+  display: flex;
+  align-items: center;
+  margin-bottom: 14rpx;
+}
+
+.lf-title {
+  font-size: var(--body-size);
+  font-weight: 600;
+  color: var(--ink);
+  flex: 1;
+  min-width: 0;
+}
+
+.lf-desc {
+  font-size: 26rpx;
+  color: var(--ink-2);
+  margin-bottom: 16rpx;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.lf-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 23rpx;
+  color: var(--ink-3);
+}
+
+.lf-status {
+  color: var(--ink-2);
+}
+
+/* ── 悬浮发布按钮 ── */
+.publish-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(190rpx + env(safe-area-inset-bottom));
+  padding: 20rpx 32rpx;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.publish-btn {
+  pointer-events: auto;
+  background: var(--primary);
+  color: var(--campus-on-accent);
+  font-size: 30rpx;
+  font-weight: 500;
+  text-align: center;
+  padding: 26rpx 0;
+  border-radius: var(--content-radius);
+  border: 1rpx solid var(--campus-line);
+  box-shadow: none;
+}
+
+/* Selected design overrides. */
+.root--tab { padding-bottom: calc(var(--tab-space) + 144rpx); }
+.segment { margin: var(--section-gap) var(--page-gutter) 20rpx; }
+.seg-item { min-height: 72rpx; display: flex; align-items: center; justify-content: center; padding: 14rpx; }
+.seg-item.on { background: var(--primary); color: var(--campus-on-accent); }
+.filter-row { padding-left: var(--page-gutter); padding-right: var(--page-gutter); display: flex; flex-wrap: wrap; gap: 12rpx; }
+.filter-chip { margin: 0; padding: 14rpx 20rpx; }
+.lf-item { display: flex; align-items: flex-start; gap: 22rpx; margin-top: 22rpx; margin-bottom: 22rpx; padding: 24rpx; }
+.lf-symbol { display: flex; align-items: center; justify-content: center; width: var(--lost-image-size); height: var(--lost-image-size); flex-shrink: 0; border-radius: var(--content-radius); background: var(--campus-tone-orange); }
+.lf-symbol--found { background: var(--campus-tone-green); }
+.lf-symbol image { display: block; width: calc(var(--icon-size) + 8rpx); height: calc(var(--icon-size) + 8rpx); }
+.lf-main { flex: 1; min-width: 0; }
+.lf-head { flex-wrap: wrap; gap: 8rpx; }
+.lf-title { font-size: var(--body-size); min-width: 0; overflow-wrap: break-word; }
+.lf-desc { font-size: 26rpx; }
+.lf-meta { flex-wrap: wrap; gap: 10rpx; font-size: 23rpx; }
+.publish-bar { bottom: var(--tab-space); padding: 12rpx var(--page-gutter); }
+.publish-btn { background: var(--primary); color: var(--campus-on-accent); padding: 22rpx 0; border-radius: var(--content-radius); }
+
+.lf-cover { display: block; width: var(--lost-image-size); height: var(--lost-image-size); border-radius: var(--content-radius); flex-shrink: 0; }
+.lf-detail-mask { position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,.4); }
+.lf-detail-sheet { position: fixed; bottom: var(--tab-space); left: var(--page-gutter); right: var(--page-gutter); z-index: 101; max-height: 70vh; display: flex; flex-direction: column; background: var(--campus-surface); color: var(--ink); border: 1rpx solid var(--campus-line); border-radius: var(--content-radius); overflow: hidden; }
+.lf-detail-heading { display: flex; align-items: center; justify-content: space-between; padding: 12rpx 24rpx; gap: 20rpx; border-bottom: 1rpx solid var(--campus-line); font-size: 28rpx; font-weight: 600; flex-shrink: 0; }
+.lf-detail-close { width: 72rpx; height: 72rpx; display: flex; align-items: center; justify-content: flex-end; }
+.lf-detail-close image { display: block; width: 36rpx; height: 36rpx; }
+.lf-detail-scroll { max-height: 58vh; min-height: 0; }
+.lf-detail-content { padding: 24rpx; }
+.lf-detail-title { font-size: 32rpx; line-height: 1.5; font-weight: 600; margin: 16rpx 0; word-break: break-all; }
+.lf-detail-description { font-size: var(--body-size); line-height: 1.8; white-space: pre-wrap; word-break: break-all; margin-bottom: 24rpx; }
+.lf-detail-images { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12rpx; margin-bottom: 24rpx; }
+.lf-detail-images image { display: block; width: 100%; height: 152rpx; border-radius: var(--content-radius); }
+.lf-detail-field { display: flex; align-items: baseline; gap: 24rpx; padding: 16rpx 0; font-size: 25rpx; border-top: 1rpx solid var(--campus-line); }
+.lf-detail-field>text:first-child { width: 120rpx; flex-shrink: 0; color: var(--ink-2); }
+.lf-detail-field>text+text { flex: 1; min-width: 0; word-break: break-all; }
+.photo-loading { padding: 20rpx 0; font-size: 24rpx; color: var(--ink-2); }

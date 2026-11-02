@@ -1,0 +1,61 @@
+<view class="root root--tab {{gq}}">
+  <glass-bg />
+  <glass-nav title="我的" />
+
+  <view class="surface-section mine-section user-card">
+    <view class="user-avatar"><image src="/assets/icons/user-round-green.png" mode="aspectFit" /></view>
+    <view class="user-info">
+      <view class="user-name">校园访客</view>
+      <view class="user-status">免登录使用 · 记录保存在当前设备身份下</view>
+    </view>
+  </view>
+
+  <!-- 我的服务 -->
+  <view class="surface-section mine-section service-section">
+    <view class="section-title">我的服务</view>
+    <view class="service-grid">
+      <view class="service-item press" hover-class="pressed" hover-start-time="0" hover-stay-time="60" bindtap="goFavorites" role="button">
+        <view class="service-symbol service-symbol--heart tone-rose"><image src="/assets/icons/heart-green.png" mode="aspectFit" /></view>
+        <text class="service-name">我的收藏</text>
+      </view>
+      <view class="service-item press" hover-class="pressed" hover-start-time="0" hover-stay-time="60" bindtap="goCourses" role="button">
+        <view class="service-symbol tone-blue"><image src="/assets/icons/calendar-days-green.png" mode="aspectFit" /></view>
+        <text class="service-name">我的课表</text>
+      </view>
+      <view class="service-item press" hover-class="pressed" hover-start-time="0" hover-stay-time="60" bindtap="goAcademics" role="button">
+        <view class="service-symbol service-symbol--graduation-cap tone-green"><image src="/assets/icons/graduation-cap-green.png" mode="aspectFit" /></view>
+        <text class="service-name">我的教务</text>
+      </view>
+      <view class="service-item press" hover-class="pressed" hover-start-time="0" hover-stay-time="60" bindtap="goCampusServices" role="button">
+        <view class="service-symbol service-symbol--school tone-green"><image src="/assets/icons/school-green.png" mode="aspectFit" /></view>
+        <text class="service-name">校园生活</text>
+      </view>
+      <view class="service-item press" hover-class="pressed" hover-start-time="0" hover-stay-time="60" bindtap="goHelp" role="button">
+        <view class="service-symbol service-symbol--ticket tone-rose"><image src="/assets/icons/ticket-green.png" mode="aspectFit" /></view>
+        <text class="service-name">人工服务</text>
+      </view>
+      <view class="service-item press" hover-class="pressed" hover-start-time="0" hover-stay-time="60" bindtap="goRuns" role="button">
+        <view class="service-symbol tone-blue"><image src="/assets/icons/route-green.png" mode="aspectFit" /></view>
+        <text class="service-name">我的办理</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 进行中的办理 -->
+  <view wx:if="{{runs.length}}" class="surface-section mine-section">
+    <view class="section-title">进行中的办理</view>
+    <view class="run-item press" hover-class="pressed" hover-start-time="0" hover-stay-time="60"
+          wx:for="{{runs}}" wx:key="id" data-id="{{item.id}}" bindtap="openRun">
+      <view class="run-item-main">
+        <view class="run-item-title">{{item.title}}</view>
+        <view class="run-item-meta">开始于 {{item.startedText}}</view>
+      </view>
+      <image class="run-item-arrow" src="/assets/icons/chevron-right.png" mode="aspectFit" />
+    </view>
+  </view>
+
+  <view class="about-tip">
+    <text>北方民族大学校园 Agent · MVP 演示版</text>
+    <text>AI 聊天 / 失物招领 / 课表 · 数据每日更新</text>
+  </view>
+</view>

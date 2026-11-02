@@ -1,0 +1,130 @@
+/* 人工服务 —— 玻璃版 */
+
+.help-hint {
+  font-size: 24rpx;
+  color: var(--ink-2);
+  line-height: 1.7;
+  margin-bottom: 20rpx;
+}
+
+.fb-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20rpx;
+}
+
+.fb-chip {
+  font-size: 24rpx;
+  color: var(--ink-2);
+  background: var(--campus-canvas);
+  border: 1rpx solid var(--campus-line);
+  padding: 10rpx 28rpx;
+  border-radius: var(--content-radius);
+  margin: 0 14rpx 14rpx 0;
+}
+
+.fb-chip.on {
+  background: var(--primary);
+  color: var(--campus-on-accent);
+  border-color: var(--campus-line);
+}
+
+.form-item {
+  margin-bottom: 18rpx;
+}
+
+.form-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--campus-canvas);
+  border: 1rpx solid var(--campus-line);
+  border-radius: var(--content-radius);
+  font-size: 27rpx;
+  color: var(--ink);
+  height: 84rpx;
+  line-height: 84rpx;
+  padding: 0 24rpx;
+  box-shadow: none;
+}
+
+.fb-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  height: 190rpx;
+  background: var(--campus-canvas);
+  border: 1rpx solid var(--campus-line);
+  border-radius: var(--content-radius);
+  padding: 20rpx 24rpx;
+  font-size: 27rpx;
+  margin-bottom: 18rpx;
+}
+
+.ph {
+  color: var(--ink-2);
+}
+
+.help-tip {
+  font-size: 22rpx;
+  color: var(--ink-3);
+  margin-top: 18rpx;
+  line-height: 1.7;
+}
+
+.ticket-item {
+  padding: 22rpx;
+  border-radius: var(--content-radius);
+  margin-bottom: 14rpx;
+}
+
+.ticket-head {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 10rpx;
+}
+
+.ticket-cat {
+  font-size: 22rpx;
+  color: var(--ink-3);
+}
+
+.ticket-time {
+  margin-left: auto;
+  font-size: 22rpx;
+  color: var(--ink-3);
+}
+
+.ticket-title {
+  font-size: var(--body-size);
+  color: var(--ink);
+}
+
+.ticket-detail {
+  font-size: 24rpx;
+  color: var(--ink-2);
+  margin-top: 8rpx;
+  line-height: 1.6;
+}
+
+.channel-item {
+  display: flex;
+  flex-direction: column;
+  padding: 18rpx 0;
+  border-bottom: 1rpx solid var(--campus-line);
+}
+
+.channel-item:last-child {
+  border-bottom: none;
+}
+
+.channel-name {
+  font-size: var(--body-size);
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.channel-info {
+  font-size: 24rpx;
+  color: var(--ink-2);
+  margin-top: 6rpx;
+}

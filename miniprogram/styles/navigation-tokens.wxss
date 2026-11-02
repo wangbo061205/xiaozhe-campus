@@ -1,0 +1,72 @@
+/* Generated for the isolated custom tab bar. */
+.tabbar-dock {
+
+  --campus-accent: #2164B5;
+  --campus-canvas: #F3F7FC;
+  --campus-surface: #FFFFFF;
+  --campus-text: #24354B;
+  --campus-secondary: #526781;
+  --campus-line: #DDE7F3;
+  --campus-signal: #9A462F;
+  --campus-glass: #FFFFFF;
+  --campus-tone-green: #E7F0FB;
+  --campus-tone-blue: #E7F0FB;
+  --campus-tone-rose: #E7F0FB;
+  --campus-tone-orange: #E7F0FB;
+  --campus-on-accent: #FFFFFF;
+  --campus-accent-ink: #2164B5;
+  --page-gutter: 24rpx;
+  --section-gap: 24rpx;
+  --content-radius: 16rpx;
+  --body-size: 28rpx;
+  --icon-size: 38rpx;
+  --hero-height: 308rpx;
+  --search-width: 91%;
+  --search-height: 88rpx;
+  --shortcut-size: 86rpx;
+  --course-height: 200rpx;
+  --activity-image-size: 100rpx;
+  --avatar-size: 80rpx;
+  --lost-image-size: 88rpx;
+  --nav-width: 90%;
+  --nav-height: 128rpx;
+  --map-control-size: 88rpx;
+  --map-sheet-height: 240rpx;
+  --composer-height: 96rpx;
+  --glass-radius: 80rpx;
+  --glass-fill: 0.3;
+  --glass-blur: 26rpx;
+  --glass-saturation: 1.4;
+  --glass-highlight: 0.6;
+  --glass-shadow: 0.12;
+  --motion-duration: 180ms;
+  --surface-inset: 28rpx;
+  --surface-radius: calc(var(--content-radius) + var(--surface-inset));
+  --surface-shadow: 0 1rpx 3rpx rgba(24,50,83,.025), 0 8rpx 24rpx rgba(24,50,83,.035), 0 24rpx 56rpx -20rpx rgba(24,50,83,.075);
+  --glass-coat: 0.1;
+  --reveal-duration: 280ms;
+
+  --mist: var(--campus-canvas);
+  --sand: var(--campus-canvas);
+  --grain: var(--campus-tone-green);
+  --primary: var(--campus-accent);
+  --primary-2: var(--campus-accent-ink);
+  --ink: var(--campus-text);
+  --ink-2: var(--campus-secondary);
+  --ink-3: var(--campus-secondary);
+  --signal-ink: #9A462F;
+  --danger: #B42318;
+  --ok: var(--campus-accent-ink);
+  --glass-rgb: 255, 255, 255;
+  --tab-space: calc(var(--nav-height) + 40rpx + env(safe-area-inset-bottom));
+  --field-label-width: 176rpx;
+  --glass-radius-1: var(--content-radius);
+  --glass-radius-2: var(--content-radius);
+  --glass-radius-3: var(--glass-radius);
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --dur-press: var(--motion-duration);
+  --dur-switch: var(--motion-duration);
+  --dur-sheet: var(--motion-duration);
+  --press-scale: 0.98;
+
+}

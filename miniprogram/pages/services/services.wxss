@@ -1,0 +1,23 @@
+.root { padding-bottom: 40rpx; }.service-tabs { white-space: nowrap; background: var(--campus-surface); width: 100%; border-bottom: 1rpx solid var(--campus-line); }.service-tab { display: inline-block; margin: 0 24rpx; padding: 24rpx 0 20rpx; color: var(--ink-2); font-size: 28rpx; border-bottom: 5rpx solid transparent; }.service-tab.active { color: var(--campus-accent-ink); font-weight: 600; border-bottom-color: var(--campus-line); }
+.service-toolbar { padding: 24rpx 28rpx; background: var(--campus-surface); }.search-trigger { width: 48rpx; height: 60rpx; display: flex; align-items: center; justify-content: center; }.food-filters { display: flex; align-items: center; gap: 26rpx; margin-top: 22rpx; }.food-filters .segment { flex: 1; }.meal-select { display: flex; align-items: center; font-size: 24rpx; color: var(--ink-2); }.dorm-segment { margin-top: 20rpx; }.category-strip { white-space: nowrap; margin-top: 24rpx; }.category-option { display: inline-block; margin-right: 30rpx; color: var(--ink-2); padding: 4rpx 0; font-size: 24rpx; }.category-option.active { color: var(--campus-accent-ink); font-weight: 600; }
+.service-list { background: var(--campus-surface); padding: 0 30rpx; margin-top: 14rpx; }.service-record { display: flex; align-items: center; gap: 22rpx; padding: 28rpx 0; border-bottom: 1rpx solid var(--campus-line); }.service-record:last-child { border-bottom: 0; }.record-pressed { background: var(--campus-tone-green); }.record-cover { width: 152rpx; height: 160rpx; border-radius: var(--content-radius); flex-shrink: 0; }.record-placeholder { width: 104rpx; height: 104rpx; border-radius: var(--content-radius); flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: var(--campus-tone-green); }.record-placeholder image { width: 44rpx; height: 44rpx; }.record-main { flex: 1; min-width: 0; }.record-title { font-size: var(--body-size); font-weight: 600; line-height: 1.55; word-break: break-all; }.record-subtitle { font-size: 21rpx; color: var(--campus-accent-ink); margin-top: 6rpx; }.record-description { font-size: 24rpx; color: var(--ink-2); line-height: 1.65; margin-top: 8rpx; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }.record-footer { font-size: 21rpx; color: var(--ink-2); margin-top: 10rpx; }.price { color: var(--signal-ink); font-weight: 600; font-size: 27rpx; }
+.load-more { text-align: center; color: var(--campus-accent-ink); font-size: 25rpx; padding: 28rpx; }.availability { font-size: 22rpx; color: var(--signal-ink); background: var(--campus-tone-orange); padding: 20rpx 32rpx; }.metrics-grid { display: flex; flex-wrap: wrap; background: var(--campus-surface); padding: 30rpx; gap: 20rpx; margin-top: 14rpx; }.metric { width: calc(50% - 10rpx); padding: 20rpx 12rpx; border-bottom: 1rpx solid var(--campus-line); }.metric-value { color: var(--campus-accent-ink); font-size: 40rpx; font-weight: 600; margin-bottom: 4rpx; }
+.media-grid { display: flex; flex-wrap: wrap; justify-content: space-between; padding: 24rpx; background: transparent; }.media-grid .service-record { width: 48%; flex: none; margin-bottom: 24rpx; display: block; padding: 0; background: var(--campus-surface); border: 0; border-radius: var(--content-radius); overflow: hidden; }.media-grid .record-cover { display: block; width: 100%; height: 240rpx; border-radius: var(--content-radius); }.media-grid .record-main { padding: 18rpx; }.media-grid .record-title { font-size: 24rpx; font-weight: 400; }
+.service-tabs-shell { padding: 0 var(--page-gutter); background: var(--campus-surface); border-bottom: 1rpx solid var(--campus-line); }
+.service-tabs { border-bottom: 0; }
+.service-tab { margin: 0 32rpx 0 0; line-height: 40rpx; }
+.service-tab:last-child { margin-right: 0; }
+.service-toolbar { padding-left: var(--page-gutter); padding-right: var(--page-gutter); }
+.search-trigger { flex-shrink: 0; height: 64rpx; }
+.service-list, .metrics-grid, .media-grid { padding-left: var(--page-gutter); padding-right: var(--page-gutter); }
+.record-cover, .record-placeholder { width: 120rpx; height: 120rpx; }
+.record-placeholder image { display: block; }
+.record-main { text-align: left; }
+.record-title { line-height: 42rpx; }
+.record-subtitle, .record-footer { line-height: 32rpx; }
+.meal-select { gap: 6rpx; line-height: 34rpx; }
+
+/* Selected design overrides. */
+.service-tabs-shell, .service-toolbar { background: var(--campus-surface); }
+.service-record { border-bottom-color: var(--campus-line); }
+.price { color: var(--signal-ink); }

@@ -1,0 +1,12 @@
+{
+  "name": "campus-agent-devtools",
+  "private": true,
+  "scripts": {
+    "assets": "node scripts/build-icons.mjs",
+    "test": "node --test tests/*.test.cjs"
+  },
+  "devDependencies": {
+    "lucide-static": "^0.468.0",
+    "sharp": "^0.34.0"
+  }
+}

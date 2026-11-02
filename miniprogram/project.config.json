@@ -1,0 +1,33 @@
+{
+  "miniprogramRoot": "./",
+  "projectname": "折丹SI",
+  "libVersion": "3.17.5",
+  "setting": {
+    "es6": true,
+    "postcss": true,
+    "minified": true,
+    "uglifyFileName": false,
+    "enhance": true,
+    "coverView": true,
+    "ignoreUploadUnusedFiles": true,
+    "minifyWXSS": true,
+    "minifyWXML": true,
+    "uploadWithSourceMap": true,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    },
+    "useCompilerPlugins": false
+  },
+  "compileType": "miniprogram",
+  "simulatorPluginLibVersion": {},
+  "packOptions": {
+    "ignore": [{ "value": "tests", "type": "folder" }],
+    "include": []
+  },
+  "appid": "wx85bd8cd2e616d9cc",
+  "editorSetting": {}
+}

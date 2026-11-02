@@ -1,0 +1,8 @@
+**
+!pom.xml
+!src/
+!src/**
+!deploy/
+!deploy/production/
+!deploy/production/Dockerfile
+!deploy/production/Dockerfile.dockerignore

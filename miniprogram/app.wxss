@@ -1,0 +1,97 @@
+@import "styles/design-tokens.wxss";
+@import "styles/craft.wxss";
+
+/* Shared semantic surfaces; selected values live in design-tokens.wxss. */
+page {
+  background: var(--campus-canvas);
+  color: var(--ink);
+  font-size: var(--body-size);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  line-height: 1.6;
+  letter-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+}
+view, text, input, textarea, button, scroll-view { box-sizing: border-box; }
+button { margin: 0; line-height: 1.5; }
+button::after { border: 0; }
+input, textarea { color: var(--ink); }
+input::placeholder, textarea::placeholder, .ph { color: var(--ink-3); }
+.root { position: relative; z-index: 1; min-height: 100vh; }
+.root--tab { padding-bottom: var(--tab-space); }
+.press { transition: transform var(--dur-press) var(--ease); }
+.pressed { transform: scale(var(--press-scale)); }
+
+/* Content uses solid surfaces; floating navigation owns the glass material. */
+.glass-1, .glass-2, .glass-3, .card,
+.gq-low .glass-1, .gq-low .glass-2, .gq-low .glass-3, .gq-low .card {
+  position: relative;
+  background: var(--campus-surface);
+  border: 1rpx solid var(--campus-line);
+  border-radius: var(--content-radius);
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.card { margin: var(--section-gap) var(--page-gutter); padding: 28rpx; }
+.section-title { font-size: var(--body-size); line-height: 1.4; font-weight: 600; color: var(--ink); margin-bottom: 20rpx; }
+.section-sub { color: var(--ink-2); font-size: 24rpx; line-height: 1.6; }
+.surface-section {
+  margin: 0;
+  padding: var(--section-gap) var(--page-gutter);
+  background: var(--campus-surface);
+  border-bottom: var(--section-gap) solid var(--campus-canvas);
+}
+.section-head { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; margin-bottom: 24rpx; }
+.section-head .section-title { margin: 0; font-size: var(--body-size); line-height: 44rpx; }
+.section-action { display: flex; align-items: center; justify-content: center; gap: 6rpx; min-height: 60rpx; color: var(--ink-2); font-size: 24rpx; flex-shrink: 0; }
+.subtle { color: var(--ink-2); font-size: 24rpx; line-height: 36rpx; }
+.icon { width: var(--icon-size); height: var(--icon-size); flex-shrink: 0; }
+.icon-sm { width: 30rpx; height: 30rpx; flex-shrink: 0; }
+
+.tag { display: inline-block; font-size: 22rpx; line-height: 32rpx; padding: 4rpx 14rpx; border-radius: 8rpx; margin-right: 8rpx; background: var(--campus-tone-blue); color: var(--ink); }
+.tag-type { background: var(--campus-tone-blue); }
+.tag-official, .tag-found { background: var(--campus-tone-green); }
+.tag-expired { background: var(--campus-tone-rose); color: var(--danger); }
+.tag-lost { background: var(--campus-tone-orange); color: var(--signal-ink); }
+.tone-green { background: var(--campus-tone-green); }
+.tone-blue { background: var(--campus-tone-blue); }
+.tone-rose, .tone-purple { background: var(--campus-tone-rose); }
+.tone-orange { background: var(--campus-tone-orange); }
+
+.btn-primary { background: var(--primary); color: var(--campus-on-accent); border: 0; border-radius: var(--content-radius); min-height: 88rpx; font-size: 30rpx; font-weight: 600; padding: 22rpx 24rpx; text-align: center; box-shadow: none; }
+.btn-primary[disabled] { background: var(--campus-tone-green) !important; color: var(--ink-3) !important; box-shadow: none !important; opacity: .6; }
+.btn-ghost { display: inline-block; background: var(--campus-tone-green); color: var(--campus-accent-ink); border: 1rpx solid var(--campus-line); border-radius: var(--content-radius); font-size: 26rpx; padding: 12rpx 30rpx; }
+.hot-chip, .filter-chip, .fb-chip { display: inline-block; font-size: 24rpx; color: var(--ink-2); background: var(--campus-surface); border: 1rpx solid var(--campus-line); padding: 14rpx 24rpx; border-radius: var(--content-radius); margin: 0 16rpx 16rpx 0; box-shadow: none; }
+.filter-chip.on, .fb-chip.on { background: var(--primary); color: var(--campus-on-accent); border-color: var(--primary); }
+
+.empty { text-align: center; padding: 80rpx var(--page-gutter); color: var(--ink-3); font-size: 26rpx; }
+.empty-icon { display: block; font-size: 72rpx; margin-bottom: 16rpx; }
+.loading-box { text-align: center; padding: 60rpx 0; color: var(--ink-3); font-size: 26rpx; }
+.state-box { padding: 64rpx 0; text-align: center; color: var(--ink-3); font-size: 26rpx; }
+.state-box image { display: block; width: 64rpx; height: 64rpx; margin: 0 auto 20rpx; }
+.state-title { color: var(--ink); font-size: 28rpx; margin-bottom: 14rpx; }
+.state-action { display: inline-block; color: var(--campus-accent-ink); font-size: 26rpx; padding: 16rpx 28rpx; }
+
+.form-item { margin-bottom: 26rpx; }
+.form-label { font-size: 27rpx; color: var(--ink-2); margin-bottom: 12rpx; font-weight: 500; }
+.req { color: var(--danger); }
+.form-input, .form-textarea, .todo-add-input, .fb-textarea {
+  background: var(--campus-canvas);
+  border: 1rpx solid var(--campus-line);
+  border-radius: var(--content-radius);
+  padding: 20rpx 24rpx;
+  font-size: 28rpx;
+  color: var(--ink);
+  box-shadow: none;
+}
+/* Explicit input height prevents native WeChat text clipping. */
+.form-input, .todo-add-input { height: 88rpx; line-height: 88rpx; padding: 0 24rpx; }
+.form-textarea { width: 100%; height: 200rpx; }
+.form-tip { font-size: 24rpx; color: var(--ink-3); margin-top: 20rpx; line-height: 1.7; }
+.search-field-row { display: flex; align-items: center; gap: 16rpx; height: var(--search-height); padding: 0 24rpx; background: var(--campus-canvas); border: 1rpx solid var(--campus-line); border-radius: var(--content-radius); }
+.search-field-row input { flex: 1; min-width: 0; width: 0; height: calc(var(--search-height) - 4rpx); line-height: calc(var(--search-height) - 4rpx); font-size: 28rpx; }
+.search-field-row image { display: block; }
+.segment { display: flex; padding: 6rpx; border-radius: var(--content-radius); background: var(--campus-canvas); }
+.segment-item { flex: 1; min-width: 0; min-height: 72rpx; display: flex; align-items: center; justify-content: center; padding: 15rpx 8rpx; line-height: 34rpx; text-align: center; font-size: 25rpx; color: var(--ink-2); border-radius: var(--content-radius); }
+.segment-item.active { background: var(--primary); color: var(--campus-on-accent); font-weight: 600; box-shadow: none; }
+.source-note { padding: 26rpx var(--page-gutter); text-align: center; font-size: 22rpx; color: var(--ink-3); }

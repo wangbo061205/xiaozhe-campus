@@ -1,0 +1,47 @@
+/* 我的收藏 —— 玻璃版 */
+
+.fav-item {
+  margin-top: 16rpx;
+}
+
+.fav-head {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.fav-remove {
+  margin-left: auto;
+  font-size: 22rpx;
+  color: var(--danger);
+  background: var(--campus-tone-rose);
+  padding: 6rpx 18rpx;
+  border-radius: var(--content-radius);
+  box-shadow: none;
+}
+
+.fav-title {
+  font-size: var(--body-size);
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 8rpx;
+}
+
+.fav-summary {
+  font-size: 25rpx;
+  color: var(--ink-2);
+  margin-bottom: 10rpx;
+  line-height: 1.6;
+}
+
+.fav-source {
+  font-size: 22rpx;
+  color: var(--ink-3);
+}
+
+.empty-sub {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  color: var(--ink-3);
+}

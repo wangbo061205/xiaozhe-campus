@@ -1,0 +1,29 @@
+<view class="root {{gq}}">
+  <glass-bg /><glass-nav title="校园生活" back />
+  <view class="service-tabs-shell">
+  <scroll-view class="service-tabs" scroll-x enhanced show-scrollbar="{{false}}" scroll-into-view="tab-{{type}}">
+    <view class="service-tab {{type === item.key ? 'active' : ''}}" wx:for="{{tabs}}" wx:key="key" id="tab-{{item.key}}" data-key="{{item.key}}" bindtap="onTab">{{item.label}}</view>
+  </scroll-view>
+  </view>
+  <view class="service-toolbar">
+    <view class="search-field-row"><image class="icon-sm" src="/assets/icons/search.png" /><input placeholder="搜索{{tabs[0].key === type ? '活动' : '校园内容'}}" value="{{keyword}}" bindinput="onKeyword" bindconfirm="onSearch" confirm-type="search" /><view bindtap="onSearch" class="search-trigger" aria-label="搜索"><image class="icon-sm" src="/assets/icons/arrow-right-green.png" /></view></view>
+    <view wx:if="{{type === 'food'}}" class="food-filters"><view class="segment"><view wx:for="{{foodModes}}" wx:key="key" class="segment-item {{mode === item.key ? 'active' : ''}}" data-key="{{item.key}}" bindtap="onMode">{{item.label}}</view></view><picker range="{{meals}}" value="{{mealIndex}}" bindchange="onMeal"><view class="meal-select">{{meals[mealIndex]}}<image class="icon-sm" src="/assets/icons/chevron-down.png" /></view></picker></view>
+    <view wx:if="{{type === 'dormitory'}}" class="segment dorm-segment"><view wx:for="{{dormModes}}" wx:key="key" class="segment-item {{mode === item.key ? 'active' : ''}}" data-key="{{item.key}}" bindtap="onMode">{{item.label}}</view></view>
+    <scroll-view wx:if="{{type === 'activity' && categories.length}}" scroll-x class="category-strip"><text class="category-option {{!categoryId ? 'active' : ''}}" data-id="" bindtap="onCategory">全部</text><text wx:for="{{categories}}" wx:key="id" wx:if="{{item.id !== 'all'}}" class="category-option {{categoryId === item.id ? 'active' : ''}}" data-id="{{item.id}}" bindtap="onCategory">{{item.title}}</text></scroll-view>
+  </view>
+  <view wx:if="{{type === 'channel' && !loading}}" class="availability">{{channelEnabled ? '校园频道' : '校园频道暂未开启'}} · 投稿暂未开放</view>
+  <view wx:if="{{type === 'realtime' && metrics.length}}" class="metrics-grid"><view class="metric" wx:for="{{metrics}}" wx:key="label"><view class="metric-value">{{item.value}}</view><view class="subtle">{{item.label}}</view></view></view>
+  <view wx:if="{{loading}}" class="state-box"><image src="/assets/icons/refresh-cw.png" /><view>正在加载</view></view>
+  <view wx:elif="{{error}}" class="state-box"><image src="/assets/icons/compass.png" /><view class="state-title">{{error}}</view><view class="state-action" bindtap="onSearch">重新加载</view></view>
+  <view wx:elif="{{!list.length}}" class="state-box"><image src="/assets/icons/{{activeIcon}}.png" /><view class="state-title">暂时没有内容</view></view>
+  <view wx:else class="service-list {{type === 'media' ? 'media-grid' : ''}}">
+    <view class="service-record" wx:for="{{list}}" wx:key="viewKey" data-index="{{index}}" bindtap="openItem" hover-class="record-pressed">
+      <image wx:if="{{item.cover}}" class="record-cover" src="{{item.cover}}" mode="aspectFill" data-index="{{index}}" binderror="onImageError" />
+      <view wx:else class="record-placeholder"><image src="/assets/icons/{{activeIcon}}-green.png" /></view>
+      <view class="record-main"><view class="record-title">{{item.title}}</view><view wx:if="{{item.subtitle}}" class="record-subtitle">{{item.subtitle}}</view><view wx:if="{{item.description}}" class="record-description">{{item.description}}</view><view wx:if="{{item.priceText || item.dateText}}" class="record-footer"><text wx:if="{{item.priceText}}" class="price">¥{{item.priceText}}</text><text wx:else>{{item.dateText}}</text></view></view>
+      <image wx:if="{{type !== 'media' && type !== 'realtime'}}" class="icon-sm" src="/assets/icons/chevron-right.png" />
+    </view>
+  </view>
+  <view wx:if="{{hasMore && !loading && !error}}" class="load-more" bindtap="onReachBottom">{{loadingMore ? '正在加载' : '加载更多'}}</view>
+  <view wx:if="{{!loading && !error}}" class="source-note">数据来自小北云校园<text wx:if="{{refreshAt}}"> · {{refreshAt}} 更新</text></view>
+</view>

@@ -1,0 +1,99 @@
+<view class="root {{gq}}">
+  <glass-bg />
+  <glass-nav title="详情" back />
+
+  <view wx:if="{{loading}}" class="loading-box">加载中…</view>
+
+  <block wx:else>
+    <view wx:if="{{error}}" class="empty">
+      <text class="empty-icon">📭</text>
+      <text>{{error}}</text>
+    </view>
+
+    <block wx:else>
+      <!-- 正文：长文阅读用 level-3，底色更厚，对比度优先 -->
+      <view class="card detail-card glass-3">
+        <view class="detail-title">{{item.title}}</view>
+        <view class="detail-meta">
+          <text class="tag tag-type">{{typeName}}</text>
+          <text wx:if="{{item.official}}" class="tag tag-official">官方来源</text>
+          <text wx:if="{{expired}}" class="tag tag-expired">⚠ 可能已过期</text>
+        </view>
+        <view class="detail-source">
+          <text>来源：{{item.sourceName || '未标注'}}</text>
+          <text wx:if="{{publishedText}}"> · 发布：{{publishedText}}</text>
+          <text wx:elif="{{updatedText}}"> · 更新：{{updatedText}}</text>
+          <text wx:if="{{item.sourceCategory}}"> · {{item.sourceCategory}}</text>
+        </view>
+        <view class="detail-content">{{item.content}}</view>
+        <view wx:if="{{item.sourceUrl}}" class="detail-link press" hover-class="pressed"
+              hover-start-time="0" hover-stay-time="60" bindtap="openSource">查看原文 ↗</view>
+      </view>
+
+      <!-- 材料清单（办事指南） -->
+      <view wx:if="{{materials.length}}" class="card">
+        <view class="section-title">📋 所需材料</view>
+        <view class="material-item glass-1" wx:for="{{materials}}" wx:key="*this">
+          <text class="material-dot"></text>
+          <text class="material-text">{{item}}</text>
+        </view>
+        <view class="material-tip">材料清单来自指南原文，如有差异以办理窗口要求为准。</view>
+      </view>
+
+      <!-- 开始办理（办事指南） -->
+      <view wx:if="{{isGuide}}" class="card">
+        <view class="section-title">🚀 带着你把事办完</view>
+        <view class="start-btn press" hover-class="pressed" hover-start-time="0" hover-stay-time="60" bindtap="startProcedure">
+          开始办理 · 生成材料清单与进度追踪
+        </view>
+        <view class="start-hint">办理进度仅你自己可见，可随时继续或放弃。</view>
+      </view>
+
+      <!-- 下一步 -->
+      <view class="card">
+        <view class="section-title">下一步</view>
+        <view class="action-row">
+          <view class="action-btn glass-1 press" hover-class="pressed" hover-start-time="0" hover-stay-time="60"
+                bindtap="toggleFav">
+            <text class="action-icon">{{favorited ? '⭐' : '☆'}}</text>
+            <text class="action-text">{{favorited ? '已收藏' : '收藏'}}</text>
+          </view>
+          <view class="action-btn glass-1 press" hover-class="pressed" hover-start-time="0" hover-stay-time="60"
+                bindtap="openDraft">
+            <text class="action-icon">✍️</text>
+            <text class="action-text">写申请草稿</text>
+          </view>
+        </view>
+        <view class="disclaimer">信息来自公开渠道，办理请以学校官方最新通知为准。AI 生成的草稿仅供参考。</view>
+      </view>
+    </block>
+  </block>
+
+  <!-- 申请草稿弹层 -->
+  <view wx:if="{{draftSheet}}" class="sheet-mask" bindtap="closeDraft"></view>
+  <view class="draft-sheet glass-3 {{draftSheet ? 'show' : ''}}">
+    <view class="draft-head">
+      <text class="draft-title">✍️ 申请草稿</text>
+      <text class="draft-close" bindtap="closeDraft">关闭</text>
+    </view>
+
+    <block wx:if="{{!draftText}}">
+      <view class="draft-hint">AI 将根据指南为你起草申请，缺失信息会用【】占位，请补充或修改后使用。</view>
+      <textarea class="draft-input glass-1" placeholder="补充你的情况（选填），如：我是2024级学生，昨天在三食堂丢了校园卡…"
+                value="{{draftContext}}" bindinput="onDraftInput" maxlength="300" />
+      <view class="draft-gen-btn press {{draftLoading ? 'disabled' : ''}}" hover-class="pressed"
+            hover-start-time="0" hover-stay-time="60" bindtap="genDraft">
+        {{draftLoading ? '正在起草…' : '开始生成草稿'}}
+      </view>
+    </block>
+
+    <block wx:else>
+      <textarea class="draft-output glass-1" value="{{draftText}}" bindinput="onDraftEdit" maxlength="2000" />
+      <view class="draft-actions">
+        <view class="draft-btn ghost press" hover-class="pressed" hover-start-time="0" hover-stay-time="60" bindtap="genDraft">重新生成</view>
+        <view class="draft-btn primary press" hover-class="pressed" hover-start-time="0" hover-stay-time="60" bindtap="copyDraft">复制草稿</view>
+      </view>
+      <view class="draft-note">内容由 AI 生成 · 请核对并替换【】占位后使用</view>
+    </block>
+  </view>
+</view>

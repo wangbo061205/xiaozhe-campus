@@ -1,0 +1,60 @@
+<view class="root root--tab {{gq}} chat-root {{keyboardOpen ? 'chat-root--keyboard' : ''}}" style="{{chatViewportHeight ? 'height:' + chatViewportHeight + 'px;' : ''}}">
+  <glass-bg />
+  <glass-nav title="{{assistantName}}" plain action="新对话" action-button bind:actiontap="newChat" />
+
+  <!-- 消息区 -->
+  <view class="chat-scroll-clip">
+  <scroll-view class="chat-body" scroll-y scroll-into-view="{{scrollTo}}" scroll-with-animation="{{!keyboardOpen}}">
+    <view class="msg-list {{showSuggest ? 'msg-list--welcome' : ''}}">
+      <view class="msg {{item.role === 'user' ? 'msg-user' : 'msg-bot'}} {{item.welcome && showSuggest ? 'msg--welcome' : ''}}" wx:for="{{messages}}" wx:key="key" id="{{item.key}}">
+        <image wx:if="{{item.role !== 'user'}}" class="msg-avatar" src="/assets/xiaozhe-avatar.png" mode="aspectFill" aria-label="{{assistantName}}头像" />
+        <view class="msg-bubble">
+          <text class="msg-text" selectable>{{item.text}}</text>
+          <view wx:if="{{item.sourceList.length}}" class="msg-src">
+            <button wx:for="{{item.sourceList}}" wx:for-item="src" wx:key="id" class="msg-src-item"
+                    hover-class="chat-control--pressed" hover-start-time="0" hover-stay-time="60"
+                    data-id="{{src.id}}" bindtap="onSourceTap" aria-label="查看资料：{{src.title}}">
+              <text class="msg-src-title">{{src.title}}</text>
+              <image class="msg-src-icon" src="/assets/icons/external-link.png" aria-hidden="true" />
+            </button>
+          </view>
+        </view>
+      </view>
+
+      <view wx:if="{{sending}}" class="msg msg-bot" id="typing">
+        <image class="msg-avatar" src="/assets/xiaozhe-avatar.png" mode="aspectFill" aria-label="{{assistantName}}头像" />
+        <view class="msg-bubble typing" role="status" aria-label="{{assistantName}}正在回复">
+          <view class="dot"></view><view class="dot d2"></view><view class="dot d3"></view>
+        </view>
+      </view>
+
+      <view wx:if="{{showSuggest}}" class="suggest-area">
+        <button class="suggest-chip" hover-class="chat-control--pressed" hover-start-time="0" hover-stay-time="60"
+                wx:for="{{suggestions}}" wx:key="*this" data-q="{{item}}" bindtap="onSuggest">
+          <text class="suggest-text">{{item}}</text>
+          <image class="suggest-arrow" src="/assets/icons/chevron-right.png" aria-hidden="true" />
+        </button>
+      </view>
+      <view id="bottom-anchor" class="bottom-anchor"></view>
+    </view>
+  </scroll-view>
+  </view>
+
+  <!-- Keep the composer above the keyboard while the message area shrinks. -->
+  <view class="composer-wrap">
+    <view class="composer {{keyboardOpen ? 'composer--focused' : ''}}">
+      <view class="composer-field">
+        <input class="chat-input" value="{{input}}" placeholder="和{{assistantName}}聊聊…" placeholder-class="ph"
+               bindinput="onInput" bindconfirm="send" bindfocus="onInputFocus" bindblur="onInputBlur"
+               bindkeyboardheightchange="onKeyboardHeightChange" adjust-position="{{false}}" cursor-spacing="24"
+               hold-keyboard="{{true}}" confirm-type="send" disabled="{{sending}}" maxlength="500"
+               aria-label="给{{assistantName}}发消息" />
+      </view>
+      <button class="send-btn" disabled="{{sending || !input}}" aria-label="{{sending ? '正在回复' : '发送消息'}}"
+              hover-class="send-btn--pressed" hover-start-time="0" hover-stay-time="60" bindtap="send">
+        <text wx:if="{{sending}}" class="send-progress">…</text>
+        <image wx:else class="send-icon" src="{{input ? '/assets/icons/arrow-left-white.png' : '/assets/icons/arrow-left.png'}}" aria-hidden="true" />
+      </button>
+    </view>
+  </view>
+</view>

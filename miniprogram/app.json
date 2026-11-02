@@ -1,0 +1,73 @@
+{
+  "pages": [
+    "pages/chat/chat",
+    "pages/index/index",
+    "pages/lostfound/lostfound",
+    "pages/mine/mine",
+    "pages/search/search",
+    "pages/detail/detail",
+    "pages/lf-publish/lf-publish",
+    "pages/favorites/favorites",
+    "pages/courses/courses",
+    "pages/help/help",
+    "pages/procedure/procedure",
+    "pages/map/map",
+    "pages/services/services",
+    "pages/campus-detail/campus-detail",
+    "pages/academics/academics"
+  ],
+  "window": {
+    "navigationStyle": "custom",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "北民大校园助手",
+    "backgroundColor": "#F3F7FC",
+    "backgroundColorTop": "#F3F7FC",
+    "backgroundColorBottom": "#F3F7FC",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#526781",
+    "selectedColor": "#2164B5",
+    "backgroundColor": "#F3F7FC",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/chat/chat",
+        "text": "小折"
+      },
+      {
+        "pagePath": "pages/index/index",
+        "text": "校园"
+      },
+      {
+        "pagePath": "pages/map/map",
+        "text": "地图"
+      },
+      {
+        "pagePath": "pages/lostfound/lostfound",
+        "text": "失物招领"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的"
+      }
+    ]
+  },
+  "usingComponents": {
+    "glass-bg": "/components/glass-bg/index",
+    "glass-nav": "/components/glass-nav/index"
+  },
+  "lazyCodeLoading": "requiredComponents",
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于在校园地图上显示当前位置并规划到目的地的路线"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation",
+    "startLocationUpdate",
+    "onLocationChange"
+  ],
+  "sitemapLocation": "sitemap.json"
+}

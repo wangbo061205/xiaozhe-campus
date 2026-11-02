@@ -1,0 +1,94 @@
+name: xiaozhe-campus
+
+services:
+  postgres:
+    image: postgis/postgis:16-3.4
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: campus
+      POSTGRES_USER: campus
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?请先运行 init-env.sh}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks: [database]
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U campus -d campus"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  backend:
+    build:
+      context: ../..
+      dockerfile: deploy/production/Dockerfile
+    restart: unless-stopped
+    environment:
+      TZ: Asia/Shanghai
+      SPRING_PROFILES_ACTIVE: production
+      SPRING_CONFIG_IMPORT: ""
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/campus
+      SPRING_DATASOURCE_USERNAME: campus
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:?请先生成数据库密码}
+      SERVER_FORWARD_HEADERS_STRATEGY: framework
+      JWT_SECRET: ${JWT_SECRET:?请先生成 JWT_SECRET}
+      APP_ADMIN_PASSWORD: ${APP_ADMIN_PASSWORD:?请先生成管理员密码}
+      XIAOBEI_BASE: ${XIAOBEI_BASE:-https://xyadmin.tehii.top}
+      XIAOBEI_CLIENT_ID: ${XIAOBEI_CLIENT_ID:-}
+      XIAOBEI_CLIENT_SECRET: ${XIAOBEI_CLIENT_SECRET:-}
+      DEEPSEEK_BASE_URL: ${DEEPSEEK_BASE_URL:-https://api.deepseek.com}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:?请填写 AI API Key}
+      DEEPSEEK_MODEL: ${DEEPSEEK_MODEL:-deepseek-chat}
+      LOST_FOUND_UPLOAD_DIR: /app/data/lost-found-images
+      LOGGING_LEVEL_CN_EDU_NUN_CAMPUS: INFO
+    volumes:
+      - uploads:/app/data/lost-found-images
+    networks: [database, web]
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  knowledge-seed:
+    image: postgis/postgis:16-3.4
+    restart: "no"
+    environment:
+      DB_HOST: postgres
+      DB_NAME: campus
+      DB_USER: campus
+      DB_PASSWORD: ${DB_PASSWORD:?请先生成数据库密码}
+    volumes:
+      - ../../knowledge:/seed:ro
+    entrypoint: ["/bin/sh", "/seed/restore-knowledge.sh"]
+    networks: [database]
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  https:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    environment:
+      CAMPUS_DOMAIN: ${CAMPUS_DOMAIN:?请填写正式域名}
+      ACME_EMAIL: ${ACME_EMAIL:?请填写证书通知邮箱}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks: [web]
+    depends_on:
+      knowledge-seed:
+        condition: service_completed_successfully
+
+networks:
+  database:
+    internal: true
+  web:
+
+volumes:
+  postgres_data:
+  uploads:
+  caddy_data:
+  caddy_config:
