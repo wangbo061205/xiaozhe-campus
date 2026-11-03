@@ -17,7 +17,7 @@
 需要 JDK 21+、Maven 3.9+、Node.js、PostgreSQL 16 和微信开发者工具。
 先运行 docker compose up -d postgres，再运行 mvn test 和 mvn spring-boot:run。
 Web 聊天页：http://127.0.0.1:8080/xiaozhe.html；后台：http://127.0.0.1:8080/admin.html。
-微信开发者工具打开 miniprogram/。模拟器默认连接本机；真机需在 miniprogram/config.js 设置可达的 HTTPS 合法域名。
+微信开发者工具打开 miniprogram/。模拟器默认连接本机；真机默认连接 https://xiaozhe.mxqi.cn，服务器需正确部署后端并配置微信合法域名。其他部署可修改 miniprogram/config.js。
 小程序逻辑测试：node --test tests/*.test.cjs。
 
 生产部署详见 deploy/production/README.md。宝塔 Nginx 已占用 80/443 时，可使用 deploy/production/compose.baota.yml，由宝塔反向代理到 http://127.0.0.1:18080。

@@ -6,8 +6,8 @@ App({
   globalData: {
     /* 后端地址：
        - 电脑模拟器：localhost 即可
-       - 手机真机调试：必须用电脑的局域网 IP（手机上的 localhost 是手机自己，连不到电脑）
-       - 地址统一在 config.js 修改；校园网 DHCP 更换 IP 后也需要同步调整 */
+       - 手机真机：使用 config.js 中的正式 HTTPS 合法域名
+       - 局域网 HTTP 地址仅用于手机和电脑网络互通时的本地调试 */
     baseUrl: environment.baseUrl.replace(/\/+$/, ''),
     token: '',
     userName: '校园访客',
