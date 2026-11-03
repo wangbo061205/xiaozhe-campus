@@ -1,6 +1,6 @@
 <view class="root map-root {{gq}}">
   <glass-nav title="校园地图" />
-  <map wx:if="{{mapReady}}" id="campus-map" class="campus-map" style="top:{{mapTop}}px;height:calc(100vh - {{mapTop + tabHeight}}px)" latitude="{{latitude}}" longitude="{{longitude}}" scale="{{scale}}" min-scale="5" max-scale="20" markers="{{markers}}" polyline="{{polyline}}" polygons="{{polygons}}" show-location="{{hasLocation}}" enable-satellite="{{satellite}}" enable-poi="{{true}}" enable-overlooking="{{false}}" enable-3D="{{false}}" bindmarkertap="onMarker" bindcallouttap="onMarker" bindupdated="onMapUpdated" />
+  <map wx:if="{{mapReady}}" id="campus-map" class="campus-map" style="top:{{mapTop}}px;height:calc(100vh - {{mapTop + tabHeight}}px)" latitude="{{latitude}}" longitude="{{longitude}}" scale="{{scale}}" min-scale="5" max-scale="20" markers="{{markers}}" polyline="{{polyline}}" polygons="{{polygons}}" show-location="{{false}}" enable-satellite="{{satellite}}" enable-poi="{{true}}" enable-overlooking="{{false}}" enable-3D="{{false}}" bindmarkertap="onMarker" bindcallouttap="onMarker" bindlongpress="onMapLongPress" bindupdated="onMapUpdated" />
   <view class="map-toolbar" style="top:{{mapTop + 12}}px">
     <view class="map-search">
       <picker range="{{campuses}}" range-key="title" value="{{campusIndex}}" bindchange="onCampusChange" disabled="{{!campuses.length}}"><view class="map-campus-name"><text>{{campusName}}</text><image class="icon-sm" src="/assets/icons/chevron-down-green.png" /></view></picker>
@@ -9,7 +9,7 @@
     </view>
     <view class="map-mode"><view class="map-mode-item {{mode === 'sites' ? 'active' : ''}}" data-mode="sites" bindtap="onMode"><image src="/assets/icons/map{{mode === 'sites' ? '-green' : ''}}.png" />校园地点</view><view class="map-mode-item {{mode === 'indoor' ? 'active' : ''}}" data-mode="indoor" bindtap="onMode"><image src="/assets/icons/layers{{mode === 'indoor' ? '-green' : ''}}.png" />室内地图</view></view>
   </view>
-  <view class="map-tools" style="top:{{mapTop + 148}}px"><view bindtap="toggleSatellite" class="map-tool {{satellite ? 'active' : ''}}" aria-label="切换卫星地图"><image src="/assets/icons/layers{{satellite ? '-green' : ''}}.png" /></view><view bindtap="resetMap" class="map-tool" aria-label="校园与路线全览"><image src="/assets/icons/compass-green.png" /></view><view bindtap="onLocate" class="map-tool" aria-label="更新我的位置"><image src="/assets/icons/locate-fixed-green.png" /></view></view>
+  <view class="map-tools" style="top:{{mapTop + 148}}px"><view bindtap="toggleSatellite" class="map-tool {{satellite ? 'active' : ''}}" aria-label="切换卫星地图"><image src="/assets/icons/layers{{satellite ? '-green' : ''}}.png" /></view><view bindtap="resetMap" class="map-tool" aria-label="校园与路线全览"><image src="/assets/icons/compass-green.png" /></view></view>
   <view class="map-sheet" style="bottom:{{tabHeight}}px;height:{{sheetHeight}}px">
     <view class="sheet-handle-area" catchtouchstart="onSheetStart" catchtouchmove="onSheetMove" catchtouchend="onSheetEnd" bindtap="cycleSheet"><view class="sheet-handle"></view></view>
     <view class="sheet-heading {{categoryExpanded ? 'sheet-heading-categories' : ''}}">
@@ -38,15 +38,17 @@
       <view wx:elif="{{error}}" class="state-box map-connection-error" role="alert"><view class="state-title">{{error}}</view><button class="map-retry-button" bindtap="load" disabled="{{loading}}">重新加载</button></view>
       <block wx:elif="{{selected}}">
         <view class="selected-summary"><image wx:if="{{selected.cover}}" src="{{selected.cover}}" mode="aspectFill" /><view><text class="selected-category">{{selected.categoryName || campusName}}</text><view class="selected-description">{{selected.description || selected.aliases || '校园地点'}}</view><view class="selected-detail-link" bindtap="openDetail">地点详情<image class="icon-sm" src="/assets/icons/chevron-right-green.png" /></view></view></view>
-        <view class="route-start"><view class="route-origin-dot"></view><view class="route-origin-copy"><text>从我的当前位置出发</text><text class="route-location-state">{{locationError || locationStatus}}{{!locationError && locationTime ? ' · ' + locationTime : ''}}</text></view></view>
+        <picker class="route-origin-picker" range="{{originOptions}}" range-key="title" value="{{originIndex < 0 ? 0 : originIndex}}" bindchange="onOriginChange" disabled="{{!originOptions.length}}" aria-label="选择出发地点">
+          <view class="route-start"><view class="route-origin-dot"></view><view class="route-origin-copy"><text>{{origin ? '从' + origin.title + '出发' : '选择出发地点'}}</text><text class="route-origin-hint">也可长按地图设置起点</text></view><image class="icon-sm" src="/assets/icons/chevron-down-green.png" /></view>
+        </picker>
         <view wx:if="{{routeError}}" class="route-error">{{routeError}}</view>
-        <view wx:if="{{routeNotice || offlineData || nativeNavigation}}" class="map-warning">{{routeNotice || '校园路线暂不可用，点击“出发”将打开微信地图'}}</view>
+        <view wx:if="{{offlineData}}" class="map-warning">已保存的地点可继续浏览，路线规划需要连接校园服务</view>
         <view wx:if="{{route}}" class="route-summary"><text>{{route.distance}}</text><text wx:if="{{route.time}}">{{route.time}}</text><text class="route-overview-note">校园与路线全览</text></view>
         <view wx:for="{{stepList}}" wx:key="id" class="route-step"><text>{{index + 1}}</text>{{item.text}}</view>
       </block>
       <block wx:else><view wx:if="{{!resultCount}}" class="state-box"><image src="/assets/icons/{{mode === 'indoor' ? 'layers' : 'search'}}.png" /><view class="state-title">{{mode === 'indoor' ? '暂无已发布室内地图' : '没有找到相关地点'}}</view></view><view class="place-result" wx:for="{{results}}" wx:key="viewKey" data-index="{{index}}" bindtap="onResult"><image wx:if="{{item.cover}}" class="place-cover" src="{{item.cover}}" mode="aspectFill" /><view wx:else class="place-symbol"><image src="/assets/icons/map-green.png" /></view><view class="place-main"><view class="place-title">{{item.title}}</view><view class="place-meta">{{item.categoryName || item.description || campusName}}</view></view><image class="icon-sm" src="/assets/icons/chevron-right.png" /></view></block>
       <view wx:if="{{warning}}" class="map-warning">{{warning}}</view><view wx:if="{{offlineData}}" class="map-offline-state"><text>已保存的校园地点</text><button bindtap="load" disabled="{{syncing}}">{{syncing ? '同步中' : '重新连接'}}</button></view><view class="map-source">小北云校园 · 地图信息仅供参考</view>
     </scroll-view>
-    <view wx:if="{{selected}}" class="route-actions"><button class="campus-route" bindtap="depart" disabled="{{routeLoading || !selected.point}}" loading="{{routeLoading}}" aria-label="从当前位置出发到所选目的地"><image wx:if="{{!routeLoading}}" class="icon-sm" src="/assets/icons/navigation-on-accent.png" />出发</button></view>
+    <view wx:if="{{selected}}" class="route-actions"><button class="campus-route" bindtap="depart" disabled="{{routeLoading || !selected.point || !origin}}" loading="{{routeLoading}}" aria-label="从所选起点出发到目的地"><image wx:if="{{!routeLoading}}" class="icon-sm" src="/assets/icons/navigation-on-accent.png" />出发</button></view>
   </view>
 </view>

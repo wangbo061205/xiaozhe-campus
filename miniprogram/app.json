@@ -59,15 +59,5 @@
     "glass-nav": "/components/glass-nav/index"
   },
   "lazyCodeLoading": "requiredComponents",
-  "permission": {
-    "scope.userLocation": {
-      "desc": "用于在校园地图上显示当前位置并规划到目的地的路线"
-    }
-  },
-  "requiredPrivateInfos": [
-    "getLocation",
-    "startLocationUpdate",
-    "onLocationChange"
-  ],
   "sitemapLocation": "sitemap.json"
 }

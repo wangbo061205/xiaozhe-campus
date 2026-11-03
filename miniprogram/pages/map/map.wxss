@@ -68,9 +68,12 @@
 /* Destination first, with one persistent departure action. */
 .route-start { align-items: flex-start; gap: 20rpx; padding-top: 20rpx; padding-bottom: 20rpx; }
 .route-origin-dot { width: 14rpx; height: 14rpx; margin: 12rpx 6rpx 0; border-radius: 50%; background: var(--campus-accent); box-shadow: 0 0 0 7rpx var(--campus-tone-green); flex-shrink: 0; }
-.route-origin-copy { display: flex; flex-direction: column; gap: 10rpx; min-width: 0; line-height: 1.5; }
+.route-origin-picker { display: block; margin: 0 var(--page-gutter); border-radius: calc(var(--content-radius) + 8rpx); background: var(--campus-tone-green); }
+.route-origin-picker .route-start { min-height: 44px; padding: 20rpx; align-items: center; }
+.route-origin-picker .route-start > image { flex-shrink: 0; }
+.route-origin-copy { display: flex; flex: 1; flex-direction: column; gap: 10rpx; min-width: 0; line-height: 1.5; }
 .route-origin-copy > text:first-child { color: var(--ink); font-size: 28rpx; font-weight: 500; }
-.route-location-state { font-size: 22rpx; line-height: 1.6; color: var(--ink-2); overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.route-origin-hint { font-size: 22rpx; line-height: 1.6; color: var(--ink-2); overflow-wrap: anywhere; }
 .route-actions { flex-shrink: 0; padding-top: 16rpx; padding-bottom: 20rpx; background: var(--campus-surface); box-shadow: 0 -5rpx 20rpx rgba(27,63,103,.04); }
 .map-root .route-actions .campus-route { min-height: 48px; height: auto; margin: 0; padding: 20rpx; line-height: 1.4; font-size: 30rpx; font-weight: 600; color: var(--campus-on-accent); background: var(--primary); border-radius: calc(var(--content-radius) + 8rpx); }
 .route-summary { gap: 16rpx; font-variant-numeric: tabular-nums; }

@@ -109,8 +109,6 @@ test('returning to an offline map reconnects and clears the old warning while ke
     if (!online) throw new Error('无法连接校园服务')
     return response(name)
   }, { campuses: campusResponse, categories: categoryResponse, calibrations: {} })
-  let locationStarts = 0
-  page.startLiveLocation = async () => { locationStarts++; return null }
   await page.load()
   page.onResult({ currentTarget: { dataset: { index: 0 } } })
   const destination = page.data.selected.id
@@ -122,7 +120,7 @@ test('returning to an offline map reconnects and clears the old warning while ke
   assert.equal(page.data.warning, '')
   assert.equal(page.data.error, '')
   assert.equal(page.data.selected.id, destination)
-  assert.equal(locationStarts, 1)
+  assert.equal(page.data.origin, null)
 })
 
 test('repeated onShow and retry clicks share one in-flight map load', async () => {

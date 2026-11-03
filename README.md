@@ -22,6 +22,10 @@ Web 聊天页：http://127.0.0.1:8080/xiaozhe.html；后台：http://127.0.0.1:8
 
 生产部署详见 deploy/production/README.md。宝塔 Nginx 已占用 80/443 时，可使用 deploy/production/compose.baota.yml，由宝塔反向代理到 http://127.0.0.1:18080。
 
+## 地图无需位置接口申请
+
+地图改为先选目的地，再从校园地点列表或长按地图选择起点，点击“出发”查看校园和路线全览。小程序不获取设备位置，已移除定位及持续定位接口和权限声明。此版本不提供实时位置跟随；路线仍需已部署的校园接口服务。详见 docs/MAP_NAVIGATION.md。
+
 ## 安全与来源
 
 仓库不含真实 API 密钥、后台密码、访客凭证、数据库、私有上传图片和日志。部署时使用 deploy/production/.env.example 在服务器本地生成 .env，勿提交。
