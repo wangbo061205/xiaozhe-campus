@@ -22,9 +22,11 @@ Web 聊天页：http://127.0.0.1:8080/xiaozhe.html；后台：http://127.0.0.1:8
 
 生产部署详见 deploy/production/README.md。宝塔 Nginx 已占用 80/443 时，可使用 deploy/production/compose.baota.yml，由宝塔反向代理到 http://127.0.0.1:18080。
 
+提供给服务器管理员的预编译包说明见 deploy/production/SERVER_BAOTA.md。运行 Maven 打包后，可用 `python scripts/package-server.py --output 小折服务器部署包.zip` 生成包含 JAR、知识库、备份与验收脚本的部署包；启动时使用包内 `sh deploy/production/deploy-baota.sh`。
+
 ## 地图无需位置接口申请
 
-地图改为先选目的地，再从校园地点列表或长按地图选择起点，点击“出发”查看校园和路线全览。小程序不获取设备位置，已移除定位及持续定位接口和权限声明。此版本不提供实时位置跟随；路线仍需已部署的校园接口服务。详见 docs/MAP_NAVIGATION.md。
+地图只需选择目的地，点击“出发”打开微信内置地图，再点“导航”选择手机上可用的地图应用。小程序只传公开目的地坐标，不获取设备位置，不再请求校园路线；支持已保存地点的导航交接。实际地图应用列表由微信及手机系统提供，详见 docs/MAP_NAVIGATION.md。
 
 ## 安全与来源
 

@@ -10,10 +10,9 @@ Page({
     campuses: [], campusIndex: 0, campusName: '选择校区', campusId: '',
     latitude: 0, longitude: 0, scale: 16, mapReady: false, loading: true, syncing: false, offlineData: false, searching: false,
     error: '', warning: '', keyword: '', categories: [], categoryCount: 0, categoryId: '', categoryTitle: '', categoryExpanded: false, mode: 'sites',
-    markers: [], polyline: [], polygons: [], results: [], resultCount: 0, selected: null,
-    satellite: false, routeLoading: false, route: null, routeError: '',
-    origin: null, originOptions: [], originIndex: -1,
-    indoorCount: 0, stepList: []
+    markers: [], polygons: [], results: [], resultCount: 0, selected: null,
+    satellite: false, navigationLoading: false, navigationError: '', navigationNotice: '',
+    indoorCount: 0
   },
   onLoad(options) {
     this.pageVisible = true
@@ -54,7 +53,7 @@ Page({
       return this.load()
     }
   },
-  onHide() { this.pageVisible = false; this.departureVersion = (this.departureVersion || 0) + 1; this.cancelSearch(); this.invalidateRoute(); this.setData({ categoryExpanded: false }) },
+  onHide() { this.pageVisible = false; this.cancelSearch(); this.clearNavigation(); this.setData({ categoryExpanded: false }) },
   onUnload() { this.disposed = true; this.onHide(); this.requestVersion = (this.requestVersion || 0) + 1 },
   publicCall(key, parameters) { return campus.call(key, parameters, { timeout: 8000 }) },
   applyDataset(data) {
@@ -115,7 +114,7 @@ Page({
     const selected = this.data.campuses[index]
     if (!selected || !selected.point) { this.setData({ loading: false, error: '该校区暂未提供地图坐标' }); return }
     wx.setStorageSync('selectedCampusId', selected.id)
-    this.clearRoute()
+    this.clearNavigation()
     this.visibleSites = []
     this.campusSites = []
     this.ranked = []
@@ -123,8 +122,7 @@ Page({
     this.setData({ campusIndex: index, campusName: selected.title, campusId: selected.id,
       latitude: selected.point.latitude, longitude: selected.point.longitude, mapReady: true,
       loading: false, offlineData: !!savedOnly, selected: null, keyword: '', categoryId: '', categoryTitle: '', categoryExpanded: false,
-      categories: [], categoryCount: 0, results: [], resultCount: 0, markers: [], polygons: [], error: '', warning: '',
-      origin: null, originOptions: [], originIndex: -1 })
+      categories: [], categoryCount: 0, results: [], resultCount: 0, markers: [], polygons: [], error: '', warning: '' })
     this.mapFitted = false
     this.calibration = this.savedMap && this.savedMap.calibrations && this.savedMap.calibrations[selected.id] || null
     this.updateCampusView(selected)
@@ -157,7 +155,6 @@ Page({
     this.campusBoundary = boundary
     this.setData({ categories, categoryCount: categories.length, loading: false,
       polygons: boundary.length > 2 ? [{ points: boundary, strokeWidth: 2, strokeColor: design.mapRoute + '70', fillColor: design.mapRoute + '09' }] : [] })
-    this.updateOriginOptions()
     this.refreshMarkers()
     if (!this.data.selected) this.filterSites()
     this.fitOverview()
@@ -199,7 +196,7 @@ Page({
     const mode = this.data.mode
     if (!keyword) { this.setData({ searching: false, error: '' }); this.filterSites(); return }
     this.setData({ searching: true, error: '', selected: null, markers: [] })
-    this.clearRoute()
+    this.clearNavigation()
     try {
       let data
       if (this.data.offlineData && mode === 'sites') data = (this.campusSites || []).filter(s =>
@@ -221,7 +218,7 @@ Page({
     this.cancelSearch()
     this.setData({ categoryId, categoryTitle: category ? category.title : '', selected: null, keyword: '', categoryExpanded: false, error: '',
       sheetHeight: this.sheetMid, sheetLevel: 1 })
-    this.clearRoute()
+    this.clearNavigation()
     this.filterSites()
   },
   toggleCategories() {
@@ -235,10 +232,10 @@ Page({
     const desiredHeight = Math.min(this.sheetMax, Math.max(this.sheetMid,
       (130 + rows * 90) * (this.windowWidth || 375) / 375))
     this.setData({ categoryExpanded: true, selected: null, keyword: '', error: '', sheetHeight: desiredHeight, sheetLevel: 1 })
-    this.clearRoute()
+    this.clearNavigation()
     this.filterSites()
   },
-  onMode(e) { this.cancelSearch(); this.setData({ mode: e.currentTarget.dataset.mode, keyword: '', selected: null, categoryId: '', categoryTitle: '', categoryExpanded: false, error: '' }); this.clearRoute(); this.filterSites() },
+  onMode(e) { this.cancelSearch(); this.setData({ mode: e.currentTarget.dataset.mode, keyword: '', selected: null, categoryId: '', categoryTitle: '', categoryExpanded: false, error: '' }); this.clearNavigation(); this.filterSites() },
   filterSites() {
     let sites
     if (this.data.mode === 'indoor') sites = this.buildings || []
@@ -259,7 +256,7 @@ Page({
   onResult(e) { const site = this.data.results[e.currentTarget.dataset.index]; if (site) this.selectSite(site) },
   selectSite(site) {
     this.cancelSearch()
-    this.clearRoute()
+    this.clearNavigation()
     const mapPoint = geo.calibrated(site.point, this.calibration, site.id)
     const selected = Object.assign({}, site, { mapPoint })
     const selectedHeight = 310 * (this.windowWidth || 375) / 375
@@ -268,43 +265,10 @@ Page({
     this.refreshMarkers()
     this.fitOverview()
   },
-  closeSelected() { this.setData({ selected: null, categoryExpanded: false }); this.clearRoute(); this.filterSites(); this.fitOverview() },
-  updateOriginOptions() {
-    const originOptions = (this.campusSites || []).filter(site => site.point).map(site => ({
-      id: site.id, title: site.title, point: site.point
-    }))
-    const previous = this.data.origin
-    const originIndex = previous && previous.id ? originOptions.findIndex(site => site.id === previous.id) : -1
-    const origin = previous && previous.id ? originOptions[originIndex] || null : previous
-    if (previous && (!origin || geo.distance(previous.point, origin.point) > 0)) this.clearRoute()
-    this.setData({ originOptions, originIndex, origin })
-  },
-  onOriginChange(e) {
-    const index = Number(e.detail.value)
-    const origin = Number.isInteger(index) && this.data.originOptions[index]
-    if (!origin) return
-    this.setOrigin(origin, index)
-  },
-  onMapLongPress(e) {
-    if (!this.data.selected || this.pageVisible === false || this.disposed) return
-    const displayPoint = campus.point(e.detail)
-    if (!displayPoint) return
-    const point = campus.point(geo.originalLocation(displayPoint, this.calibration))
-    if (point) this.setOrigin({ id: '', title: '地图上选定的起点', point }, -1)
-  },
-  setOrigin(origin, index) {
-    if (this.pageVisible === false || this.disposed || !campus.point(origin && origin.point)) return
-    this.clearRoute()
-    this.setData({ origin: Object.assign({}, origin, { mapPoint: geo.calibrated(origin.point, this.calibration, origin.id) }), originIndex: index })
-    this.refreshMarkers()
-    this.fitOverview()
-  },
+  closeSelected() { this.setData({ selected: null, categoryExpanded: false }); this.clearNavigation(); this.filterSites(); this.fitOverview() },
   refreshMarkers() {
     const selected = this.data.selected && Object.assign({}, this.data.selected, {
-      mapPoint: geo.calibrated(this.data.selected.point, this.calibration, this.data.selected.id)
-    })
-    const origin = this.data.origin && Object.assign({}, this.data.origin, {
-      mapPoint: geo.calibrated(this.data.origin.point, this.calibration, this.data.origin.id)
+      mapPoint: campus.point(geo.calibrated(this.data.selected.point, this.calibration, this.data.selected.id))
     })
     const markers = []
     if (selected && selected.mapPoint) {
@@ -312,77 +276,66 @@ Page({
         iconPath: '/assets/icons/map-pin.png', width: 34, height: 43,
         callout: { content: selected.title, display: 'ALWAYS', bgColor: design.palette.surface, color: design.palette.accentInk, padding: 10, fontSize: 13, borderRadius: design.tokens.contentRadius } })
     }
-    if (selected && origin && origin.mapPoint) {
-      markers.push({ id: 999998, latitude: origin.mapPoint.latitude, longitude: origin.mapPoint.longitude,
-        iconPath: '/assets/icons/locate-fixed-green.png', width: 28, height: 28,
-        callout: { content: '起点 · ' + origin.title, display: 'ALWAYS', bgColor: design.palette.surface, color: design.palette.accentInk, padding: 8, fontSize: 12, borderRadius: design.tokens.contentRadius } })
-    }
-    this.setData({ selected, origin, markers })
+    this.setData({ selected, markers })
   },
-  async depart() {
-    if (!this.data.selected || this.data.routeLoading || this.pageVisible === false || this.disposed) return
-    if (!this.data.origin) { this.setData({ routeError: '请先选择出发地点，也可以长按地图设置起点' }); return }
-    await this.planRoute()
-  },
-  async planRoute() {
-    if (this.data.routeLoading || !this.data.selected || !this.data.origin || this.pageVisible === false || this.disposed) return
+  depart() {
     const selected = this.data.selected
-    if (!selected.point) { this.setData({ routeError: '该地点暂未提供导航坐标' }); return }
-    const origin = this.data.origin
-    const campusId = this.data.campusId
-    this.setData({ routeLoading: true, routeError: '' })
-    const version = this.routeVersion = (this.routeVersion || 0) + 1
-    let request
-    try {
-      const start = origin.point
-      if (geo.distance(start, selected.point) < 5) {
-        this.setData({ routeLoading: false, route: { distance: '起点与目的地在同一位置', time: '' }, polyline: [], stepList: [] })
-        this.fitOverview()
-        return
-      }
-      request = this.publicCall('road.plan', { start_lat: start.latitude, start_lng: start.longitude,
-        end_lat: selected.point.latitude, end_lng: selected.point.longitude,
-        campus_ids: this.data.campuses.map(c => c.id).join(','), route_type: 'shortest' })
-      this.routeRequest = request
-      const data = await request
-      if (version !== this.routeVersion || this.pageVisible === false || this.disposed || campusId !== this.data.campusId || !this.data.selected || this.data.selected.id !== selected.id) return
-      const points = geo.routePoints(data.points).map(p => geo.calibrated(p, this.calibration))
-      if (points.length < 2) throw new Error('暂无可用校园路线，请重新选择目的地后重试')
-      const meters = Number(data.routeDistance || data.distance)
-      const route = { distance: Number.isFinite(meters) ? (meters >= 1000 ? (meters / 1000).toFixed(1) + ' 公里' : Math.round(meters) + ' 米') : '',
-        time: typeof data.estimatedTime === 'number' ? '约 ' + data.estimatedTime + ' 分钟' : campus.text(data.estimatedTime) }
-      const stepList = (Array.isArray(data.steps) ? data.steps : []).map((step, i) => ({ id: i,
-        text: campus.text(typeof step === 'string' ? step : step.instruction || step.description || step.text || step.roadName) })).filter(step => step.text)
-      this.setData({ route, stepList, routeLoading: false,
-        polyline: [{ points, color: design.mapRoute, width: 6, arrowLine: true, borderColor: '#FFFFFF', borderWidth: 2 }] })
-      this.fitOverview()
-    } catch (error) {
-      if (version === this.routeVersion && this.pageVisible !== false && !this.disposed && this.data.selected && this.data.selected.id === selected.id) {
-        const message = campus.errorText(error)
-        this.setData({ routeLoading: false, route: null, polyline: [], stepList: [],
-          routeError: /无法连通|路网|距.*道路/.test(message)
-            ? '所选起点与目的地之间暂无连通的校园道路，请更换起点' : message + '，可稍后点击“出发”重试' })
-      }
-    } finally {
-      if (this.routeRequest === request) this.routeRequest = null
+    if (!selected || this.navigationRequest || this.pageVisible === false || this.disposed) return Promise.resolve(false)
+    const point = campus.point(geo.calibrated(selected.point, this.calibration, selected.id))
+    if (!point) { this.setData({ navigationError: '该地点暂未提供导航坐标，可复制地点名称后搜索' }); return Promise.resolve(false) }
+    if (typeof wx.openLocation !== 'function') {
+      this.setData({ navigationError: '当前微信版本无法打开地图，可更新微信或复制地点到地图应用搜索' })
+      return Promise.resolve(false)
     }
+    const request = this.navigationRequest = {}
+    this.setData({ navigationLoading: true, navigationError: '', navigationNotice: '' })
+    return new Promise(resolve => {
+      let finished = false
+      const finish = error => {
+        if (finished) return
+        finished = true
+        if (this.navigationRequest === request) {
+          this.navigationRequest = null
+          if (!this.disposed && this.data.selected && this.data.selected.id === selected.id) {
+            const detail = error && (error.errMsg || error.message) || ''
+            this.setData({ navigationLoading: false,
+              navigationNotice: error ? '' : '在地图页点击“导航”，选择手机上可用的地图应用',
+              navigationError: !error || /cancel/i.test(detail) ? '' : '未能打开地图，请重试或复制地点到地图应用搜索' })
+          }
+        }
+        resolve(!error)
+      }
+      // Display a public destination only. Device location is handled by the chosen map app.
+      try {
+        wx.openLocation({ latitude: point.latitude, longitude: point.longitude, scale: 18,
+          name: campus.text(selected.title).slice(0, 80),
+          address: campus.text(selected.address || '北方民族大学 · ' + this.data.campusName + ' · ' + selected.title).slice(0, 160),
+          success: () => finish(), fail: finish })
+      } catch (error) { finish(error) }
+    })
   },
-  invalidateRoute() {
-    this.routeVersion = (this.routeVersion || 0) + 1
-    if (this.routeRequest && this.routeRequest.abort) this.routeRequest.abort()
-    this.routeRequest = null
-    this.setData({ routeLoading: false })
+  copyDestination() {
+    const selected = this.data.selected
+    if (!selected || this.pageVisible === false || this.disposed) return
+    if (typeof wx.setClipboardData !== 'function') { this.setData({ navigationError: '当前微信版本不支持复制，请更新微信' }); return }
+    const point = campus.point(geo.calibrated(selected.point, this.calibration, selected.id))
+    const data = ['北方民族大学', campus.text(this.data.campusName), campus.text(selected.title),
+      campus.text(selected.address), point ? 'GCJ-02：' + point.latitude.toFixed(6) + ',' + point.longitude.toFixed(6) : ''].filter(Boolean).join(' · ')
+    const version = this.departureVersion
+    wx.setClipboardData({ data, success: () => {
+      if (!this.disposed && this.pageVisible !== false && version === this.departureVersion) this.setData({ navigationError: '', navigationNotice: '地点已复制，可粘贴到地图应用搜索' })
+    }, fail: () => {
+      if (!this.disposed && this.pageVisible !== false && version === this.departureVersion) this.setData({ navigationError: '未能复制地点，请重试' })
+    } })
   },
-  clearRoute() { this.departureVersion = (this.departureVersion || 0) + 1; this.invalidateRoute(); this.setData({ route: null, polyline: [], routeError: '', stepList: [] }) },
+  clearNavigation() { this.departureVersion = (this.departureVersion || 0) + 1; this.navigationRequest = null; this.setData({ navigationLoading: false, navigationError: '', navigationNotice: '' }) },
   onMapUpdated() { if (!this.mapFitted && this.data.mapReady) { this.mapFitted = true; this.fitOverview() } },
   fitOverview(campusOnly) {
     if (this.disposed || !this.data.mapReady || !this.map || !this.map.includePoints) return
     let points = (this.campusBoundary || []).slice()
     if (!points.length) points = (this.campusSites || []).map(s => geo.calibrated(s.point, this.calibration, s.id)).filter(Boolean)
     if (!campusOnly) {
-      this.data.polyline.forEach(line => { points = points.concat(line.points) })
       if (this.data.selected && this.data.selected.mapPoint) points.push(this.data.selected.mapPoint)
-      if (this.data.selected && this.data.origin && this.data.origin.mapPoint) points.push(this.data.origin.mapPoint)
     }
     if (!points.length) return
     // MapContext padding is in map-local CSS pixels, below the search bar and above the sheet.

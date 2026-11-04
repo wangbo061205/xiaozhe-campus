@@ -120,7 +120,7 @@ test('returning to an offline map reconnects and clears the old warning while ke
   assert.equal(page.data.warning, '')
   assert.equal(page.data.error, '')
   assert.equal(page.data.selected.id, destination)
-  assert.equal(page.data.origin, null)
+  assert.equal(page.data.navigationError, '')
 })
 
 test('repeated onShow and retry clicks share one in-flight map load', async () => {

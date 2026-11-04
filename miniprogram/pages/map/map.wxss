@@ -65,18 +65,15 @@
 .map-connection-error .state-title { line-height: 1.6; }
 .map-root button.map-retry-button { display: flex; align-items: center; justify-content: center; min-height: 44px; max-width: 280rpx; margin: 20rpx auto 0; padding: 12rpx 28rpx; color: var(--campus-accent-ink); font-size: 28rpx; }
 
-/* Destination first, with one persistent departure action. */
-.route-start { align-items: flex-start; gap: 20rpx; padding-top: 20rpx; padding-bottom: 20rpx; }
-.route-origin-dot { width: 14rpx; height: 14rpx; margin: 12rpx 6rpx 0; border-radius: 50%; background: var(--campus-accent); box-shadow: 0 0 0 7rpx var(--campus-tone-green); flex-shrink: 0; }
-.route-origin-picker { display: block; margin: 0 var(--page-gutter); border-radius: calc(var(--content-radius) + 8rpx); background: var(--campus-tone-green); }
-.route-origin-picker .route-start { min-height: 44px; padding: 20rpx; align-items: center; }
-.route-origin-picker .route-start > image { flex-shrink: 0; }
-.route-origin-copy { display: flex; flex: 1; flex-direction: column; gap: 10rpx; min-width: 0; line-height: 1.5; }
-.route-origin-copy > text:first-child { color: var(--ink); font-size: 28rpx; font-weight: 500; }
-.route-origin-hint { font-size: 22rpx; line-height: 1.6; color: var(--ink-2); overflow-wrap: anywhere; }
+/* Destination handoff uses the platform map and its installed-app navigation menu. */
+.navigation-guide { margin: 12rpx var(--page-gutter) 4rpx; padding: 24rpx; border-radius: calc(var(--content-radius) + 8rpx); background: var(--campus-tone-green); }
+.navigation-guide-title { margin-bottom: 10rpx; font-size: 28rpx; line-height: 1.5; font-weight: 500; color: var(--ink); }
+.navigation-guide > text { font-size: 24rpx; line-height: 1.6; color: var(--ink-2); }
+.navigation-error, .navigation-notice { margin: 20rpx var(--page-gutter) 0; font-size: 24rpx; line-height: 1.6; overflow-wrap: anywhere; }
+.navigation-error { color: var(--signal-ink); }
+.navigation-notice { color: var(--ink-2); }
+.map-root button.copy-destination { display: flex; align-items: center; justify-content: center; min-height: 44px; margin: 8rpx var(--page-gutter) 0; padding: 12rpx 20rpx; font-size: 26rpx; line-height: 1.5; color: var(--campus-accent-ink); border-radius: calc(var(--content-radius) + 8rpx); }
 .route-actions { flex-shrink: 0; padding-top: 16rpx; padding-bottom: 20rpx; background: var(--campus-surface); box-shadow: 0 -5rpx 20rpx rgba(27,63,103,.04); }
 .map-root .route-actions .campus-route { min-height: 48px; height: auto; margin: 0; padding: 20rpx; line-height: 1.4; font-size: 30rpx; font-weight: 600; color: var(--campus-on-accent); background: var(--primary); border-radius: calc(var(--content-radius) + 8rpx); }
-.route-summary { gap: 16rpx; font-variant-numeric: tabular-nums; }
-.route-summary .route-overview-note { width: 100%; font-size: 22rpx; font-weight: 400; color: var(--ink-2); }
 .map-offline-state { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 16rpx; padding: 12rpx var(--page-gutter); color: var(--ink-2); font-size: 22rpx; }
 .map-root .map-offline-state button { min-height: 36px; margin: 0; padding: 8rpx 20rpx; line-height: 1.5; color: var(--campus-accent-ink); font-size: 24rpx; }

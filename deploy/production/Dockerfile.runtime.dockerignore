@@ -1,0 +1,7 @@
+**
+!runtime/
+!runtime/campus-agent.jar
+!deploy/
+!deploy/production/
+!deploy/production/Dockerfile.runtime
+!deploy/production/Dockerfile.runtime.dockerignore
