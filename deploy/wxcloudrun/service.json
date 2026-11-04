@@ -1,0 +1,10 @@
+{
+  "appid": "wx85bd8cd2e616d9cc",
+  "environmentId": "prod-d7gp7wlfv45ac7541",
+  "serviceName": "springboot-7661",
+  "publicBaseUrl": "https://springboot-7661-341227-6-1521776463.sh.run.tcloudbase.com",
+  "region": "ap-shanghai",
+  "containerPort": 8080,
+  "dockerfile": "Dockerfile",
+  "note": "用户提供的服务配置；模板已创建，业务代码和 PostgreSQL 尚待部署验收。"
+}

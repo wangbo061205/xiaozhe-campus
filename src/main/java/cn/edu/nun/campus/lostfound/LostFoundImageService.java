@@ -5,7 +5,9 @@ import cn.edu.nun.campus.common.BizException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -24,18 +26,28 @@ public class LostFoundImageService {
     public static final long MAX_BYTES = 5 * 1024 * 1024;
     private final LostFoundImageRepository images;
     private final LostFoundRepository posts;
+    private final LostFoundImageContentRepository contents;
     private final ObjectMapper json;
     private final Path storage;
+    private final boolean databaseStorage;
 
-    public LostFoundImageService(LostFoundImageRepository images, LostFoundRepository posts, ObjectMapper json,
-                                @Value("${app.upload.lost-found-dir:./data/lost-found-images}") String directory) {
+    public LostFoundImageService(LostFoundImageRepository images, LostFoundRepository posts,
+                                LostFoundImageContentRepository contents, ObjectMapper json,
+                                @Value("${app.upload.lost-found-dir:./data/lost-found-images}") String directory,
+                                @Value("${app.upload.storage:filesystem}") String storageMode) {
         this.images = images;
         this.posts = posts;
+        this.contents = contents;
         this.json = json;
         this.storage = Path.of(directory).toAbsolutePath().normalize();
+        if (!Set.of("filesystem", "database").contains(storageMode)) {
+            throw new IllegalArgumentException("图片存储方式只能为 filesystem 或 database");
+        }
+        this.databaseStorage = "database".equals(storageMode);
     }
 
     public record Uploaded(UUID id, String url, int width, int height) {}
+    @Transactional
     public Uploaded upload(MultipartFile file, Long userId) throws IOException {
         if (userId == null) throw new AccessDeniedException("请先登录");
         if (file == null || file.isEmpty()) throw BizException.badRequest("请选择图片");
@@ -59,20 +71,32 @@ public class LostFoundImageService {
         UUID id = UUID.randomUUID();
         String extension = format.equals("png") ? "png" : "jpg";
         String key = id + "." + extension;
-        Files.createDirectories(storage);
         Path target = storage.resolve(key);
         try {
             // Re-encode pixels to remove EXIF metadata and never retain the supplied filename.
-            try (var output = Files.newOutputStream(target, StandardOpenOption.CREATE_NEW)) {
-                if (!ImageIO.write(bitmap, extension, output)) throw new IOException("Image encoder unavailable");
+            var encoded = new ByteArrayOutputStream();
+            if (!ImageIO.write(bitmap, extension, encoded)) throw new IOException("Image encoder unavailable");
+            if (encoded.size() > MAX_BYTES) throw BizException.badRequest("图片处理后超过 5MB，请压缩后上传");
+            if (!databaseStorage) {
+                Files.createDirectories(storage);
+                Files.write(target, encoded.toByteArray(), StandardOpenOption.CREATE_NEW);
             }
             var image = new LostFoundImage();
             image.setId(id); image.setUserId(userId); image.setStorageKey(key);
             image.setWidth(bitmap.getWidth()); image.setHeight(bitmap.getHeight());
             image.setContentType(extension.equals("png") ? "image/png" : "image/jpeg");
             images.saveAndFlush(image);
+            if (databaseStorage) {
+                var pixels = new LostFoundImageContent();
+                pixels.setImageId(id);
+                pixels.setData(encoded.toByteArray());
+                contents.saveAndFlush(pixels);
+            }
             return new Uploaded(id, url(id), bitmap.getWidth(), bitmap.getHeight());
-        } catch (IOException | RuntimeException e) { Files.deleteIfExists(target); throw e; }
+        } catch (IOException | RuntimeException e) {
+            if (!databaseStorage) Files.deleteIfExists(target);
+            throw e;
+        }
     }
 
     @Transactional
@@ -97,19 +121,23 @@ public class LostFoundImageService {
         catch (JsonProcessingException e) { throw new IllegalStateException(e); }
     }
 
-    public ResponseEntity<FileSystemResource> read(UUID id, AuthUser user) {
+    public ResponseEntity<Resource> read(UUID id, AuthUser user) {
         var image = images.findById(id).orElseThrow(() -> BizException.notFound("图片"));
         boolean owner = user != null && Objects.equals(image.getUserId(), user.id());
         boolean moderator = user != null && Set.of("ADMIN", "MODERATOR").contains(user.role());
         boolean published = image.getLostFoundId() != null && posts.findById(image.getLostFoundId())
                 .map(p -> p.getStatus() == LostFound.Status.PUBLISHED).orElse(false);
         if (!published && !owner && !moderator) throw new AccessDeniedException("该图片尚未公开");
-        var file = storage.resolve(image.getStorageKey()).normalize();
-        if (!file.startsWith(storage) || !Files.isRegularFile(file)) throw BizException.notFound("图片");
+        Resource resource = contents.findById(id).<Resource>map(value -> new ByteArrayResource(value.getData()))
+                .orElseGet(() -> {
+                    var file = storage.resolve(image.getStorageKey()).normalize();
+                    if (!file.startsWith(storage) || !Files.isRegularFile(file)) throw BizException.notFound("图片");
+                    return new FileSystemResource(file);
+                });
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(image.getContentType()))
                 .cacheControl(CacheControl.noStore())
                 .header("X-Content-Type-Options", "nosniff")
-                .body(new FileSystemResource(file));
+                .body(resource);
     }
     private String url(UUID id) { return "/api/v1/lost-found/images/" + id; }
 }

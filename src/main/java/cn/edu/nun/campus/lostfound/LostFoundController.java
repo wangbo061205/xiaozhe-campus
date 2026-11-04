@@ -7,7 +7,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -52,7 +52,7 @@ public class LostFoundController {
     }
 
     @GetMapping("/images/{id}")
-    public ResponseEntity<FileSystemResource> image(@PathVariable UUID id) {
+    public ResponseEntity<Resource> image(@PathVariable UUID id) {
         return imageService.read(id, AuthUser.current());
     }
 

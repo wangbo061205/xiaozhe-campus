@@ -1,0 +1,28 @@
+# 与 production 同时启用；数据库和图片均脱离临时容器磁盘。
+spring:
+  config:
+    import: ""
+  datasource:
+    url: ${DB_JDBC_URL}
+    username: ${DB_USER:campus}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 8
+      minimum-idle: 1
+
+server:
+  address: 0.0.0.0
+  port: ${PORT:8080}
+  forward-headers-strategy: framework
+
+app:
+  upload:
+    storage: database
+  knowledge:
+    seed:
+      enabled: true
+      path: /app/knowledge/official-knowledge.csv.gz
+
+logging:
+  level:
+    cn.edu.nun.campus: info

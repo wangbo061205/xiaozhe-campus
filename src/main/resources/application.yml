@@ -28,11 +28,16 @@ spring:
           max-age: 3600
 
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 app:
   upload:
     lost-found-dir: ${LOST_FOUND_UPLOAD_DIR:./data/lost-found-images}
+    storage: ${LOST_FOUND_STORAGE:filesystem}
+  knowledge:
+    seed:
+      enabled: ${KNOWLEDGE_SEED_ENABLED:false}
+      path: ${KNOWLEDGE_SEED_PATH:./knowledge/official-knowledge.csv.gz}
   xiaobei:
     base-url: ${XIAOBEI_BASE:https://xyadmin.tehii.top}
     client-id: ${XIAOBEI_CLIENT_ID:}

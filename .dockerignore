@@ -1,0 +1,6 @@
+*
+!pom.xml
+!src/
+!src/**
+!knowledge/
+!knowledge/official-knowledge.csv.gz
